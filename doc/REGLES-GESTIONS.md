@@ -10,11 +10,12 @@
 - Un utilisateur peut créer un compte.
 - Un utilisateur peut avoir un seul compte.
 - Le client doit posséder un numéro de compte.
-- Les administrateurs ont un accès complet à tous les comptes et peuvent effectuer des transactions pour tous les utilisateurs (valider, refuser ou suspendre les différentes transactions).
+- Les administrateurs ont un accès complet à tous les comptes et peuvent effectuer des transactions pour tous les utilisateurs.
 - Un client peut faire une demande de suspension de compte.
 - Les demandes de suppression de compte doivent être validées par un administrateur avant de prendre effet.
 - Les administrateurs peuvent fermer un compte.
 - Les administrateurs peuvent ouvrir un compte.
+- Le compte possède un plafond de retrait définis en amont par celui ci.
 
 ## Transactions:
 
@@ -28,6 +29,9 @@
 - Les demandes de crédit doivent être approuvées par un administrateur avant de prendre effet.
 - Le client doit remplir un formulaire pour la demande de suspension de compte avec les raisons de celle-ci.
 - Le client doit remplir un formulaire lors d'une demande de crédit avec la raison de la demande.
+- Les administrateurs peuvent valider, refuser, ou suspendre des transactions à partir d'un montant définis par la banque.
+- L'utilisateur ne peux pas retirer si son plafond est atteint ou si le montant est superieur au plafond du compte.
+- Chaque virement doit posseder un identifiant unique permettant de verifier les différents acteurs.
 
 ## Surveillance et suivi:
 
