@@ -16,6 +16,9 @@
 - Les administrateurs peuvent fermer un compte.
 - Les administrateurs peuvent ouvrir un compte.
 - Le compte possède un plafond de retrait définis en amont par celui ci.
+- Le solde d'un utilisateur peut être à dévouvert.
+- Le client doit définir sont découvert possible.
+- Les administrateurs doivent valider les découvert possible d'un compte client.
 
 ## Transactions:
 
