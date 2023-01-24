@@ -8,7 +8,6 @@
 - Il doit y avoir une procédure de récupération de mot de passe pour les utilisateurs qui ont oublié leurs informations d'identification.
 
 ## Gestion des comptes:
-- Un utilisateur peut créer un compte.
 - Un utilisateur peut avoir un seul compte.
 - Le client doit posséder un numéro de compte.
 - Les administrateurs ont un accès complet à tous les comptes et peuvent effectuer des transactions pour tous les utilisateurs.
@@ -20,6 +19,7 @@
 - Le solde d'un client peut être à dévouvert.
 - Le client doit définir sont découvert possible.
 - Les administrateurs doivent valider les découvert possible d'un compte client.
+- A la premiere connexion l'utilisateur peut changer son mot de passe.
 
 ## Transactions:
 
