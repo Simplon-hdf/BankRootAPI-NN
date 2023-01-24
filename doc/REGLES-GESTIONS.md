@@ -6,7 +6,8 @@
 - Les informations sensibles des utilisateurs doivent être protégées et cryptées pour éviter les fuites de données.
 - Les clients doivent être authentifiés pour accéder à leur compte et effectuer des transactions.
 - Il doit y avoir une procédure de récupération de mot de passe pour les utilisateurs qui ont oublié leurs informations d'identification.
-- Gestion des comptes:
+
+## Gestion des comptes:
 - Un utilisateur peut créer un compte.
 - Un utilisateur peut avoir un seul compte.
 - Le client doit posséder un numéro de compte.
@@ -15,8 +16,8 @@
 - Les demandes de suppression de compte doivent être validées par un administrateur avant de prendre effet.
 - Les administrateurs peuvent fermer un compte.
 - Les administrateurs peuvent ouvrir un compte.
-- Le compte possède un plafond de retrait définis en amont par celui ci.
-- Le solde d'un utilisateur peut être à dévouvert.
+- Le compte possède un plafond de retrait définis en amont par le client.
+- Le solde d'un client peut être à dévouvert.
 - Le client doit définir sont découvert possible.
 - Les administrateurs doivent valider les découvert possible d'un compte client.
 
@@ -26,7 +27,7 @@
 - Un client peut retirer de l'argent.
 - Un client peut faire un virement d'un compte à un autre en utilisant le numéro de compte de la personne visée.
 - Un client peut se faire virer de l'argent.
-- Le client doit remplir un formulaire lors d'une demande de virement avec la raison du virement, le nom du titulaire du compte vers lequel il fait le virement.
+- Le client doit remplir un formulaire lors d'une demande de virement avec la raison du virement, le nom du titulaire du compte vers lequel il fait le virement et le numero de compte.
 - Le client doit donner son code secret avant chaque transaction.
 - Les clients ne peuvent pas dépasser le solde disponible sur leur compte lors d'un retrait ou d'un virement.
 - Les demandes de crédit doivent être approuvées par un administrateur avant de prendre effet.
@@ -34,11 +35,10 @@
 - Le client doit remplir un formulaire lors d'une demande de crédit avec la raison de la demande.
 - Les administrateurs peuvent valider, refuser, ou suspendre des transactions à partir d'un montant définis par la banque.
 - L'utilisateur ne peux pas retirer si son plafond est atteint ou si le montant est superieur au plafond du compte.
-- Chaque virement doit posseder un identifiant unique permettant de verifier les différents acteurs.
 
 ## Surveillance et suivi:
 
 - Le client doit avoir une interface dédiée au monitoring de son compte.
 - Les administrateurs doivent avoir une interface de monitoring des comptes de la banque.
 - Les administrateurs doivent avoir des outils pour effectuer des analyses de données et des rapports sur les transactions et les comptes.
-- Il doit y avoir une surveillance en temps réel pour détecter les activités suspectes et prévenir les fraudes.
+- Chaque virement doit posseder un identifiant unique permettant de verifier les différents acteurs.
