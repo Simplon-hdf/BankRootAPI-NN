@@ -10,7 +10,6 @@
 CREATE TABLE public.user(
                             id           SERIAL NOT NULL ,
                             name         VARCHAR (50) NOT NULL ,
-                            surname      VARCHAR (50) NOT NULL ,
                             lastname     VARCHAR (50) NOT NULL ,
                             mail         VARCHAR (50) NOT NULL ,
                             password     VARCHAR (250) NOT NULL ,
