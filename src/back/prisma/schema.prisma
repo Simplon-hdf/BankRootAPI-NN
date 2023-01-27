@@ -96,9 +96,8 @@ model transaction {
 }
 
 model user {
-  id         Int      @id(map: "user_pk") @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   name       String   @db.VarChar(50)
-  surname    String   @db.VarChar(50)
   lastname   String   @db.VarChar(50)
   mail       String   @db.VarChar(50)
   password   String   @db.VarChar(250)
