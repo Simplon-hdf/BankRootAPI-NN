@@ -9,14 +9,6 @@ datasource db {
 
 model admin {
   id           Int            @id(map: "admin_pk")
-  name         String         @db.VarChar(50)
-  surname      String         @db.VarChar(50)
-  lastname     String         @db.VarChar(50)
-  mail         String         @db.VarChar(50)
-  password     String         @db.VarChar(250)
-  uuid         String         @db.VarChar(250)
-  created_at   DateTime?      @default(now()) @db.Timestamptz(6)
-  update_at    DateTime       @db.Timestamp(6)
   user         user           @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "admin_user_fk")
   peut_gerer   peut_gerer[]
   peut_valider peut_valider[]
@@ -35,14 +27,6 @@ model bank_account {
 
 model client {
   id            Int             @id(map: "client_pk")
-  name          String          @db.VarChar(50)
-  surname       String          @db.VarChar(50)
-  lastname      String          @db.VarChar(50)
-  mail          String          @db.VarChar(50)
-  password      String          @db.VarChar(250)
-  uuid          String          @db.VarChar(250)
-  created_at    DateTime?       @default(now()) @db.Timestamptz(6)
-  update_at     DateTime        @db.Timestamp(6)
   user          user            @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_user_fk")
   peut_gerer    peut_gerer[]
   peut_posseder peut_posseder[]
@@ -112,15 +96,15 @@ model transaction {
 }
 
 model user {
-  id         Int       @id(map: "user_pk") @default(autoincrement())
-  name       String    @db.VarChar(50)
-  surname    String    @db.VarChar(50)
-  lastname   String    @db.VarChar(50)
-  mail       String    @db.VarChar(50)
-  password   String    @db.VarChar(250)
-  uuid       String    @db.VarChar(250)
-  created_at DateTime? @default(now()) @db.Timestamptz(6)
-  update_at  DateTime  @db.Timestamp(6)
+  id         Int      @id(map: "user_pk") @default(autoincrement())
+  name       String   @db.VarChar(50)
+  surname    String   @db.VarChar(50)
+  lastname   String   @db.VarChar(50)
+  mail       String   @db.VarChar(50)
+  password   String   @db.VarChar(250)
+  uuid       String   @db.VarChar(250)
+  created_at DateTime @db.Timestamp(6)
+  update_at  DateTime @db.Timestamp(6)
   admin      admin?
   client     client?
 }
