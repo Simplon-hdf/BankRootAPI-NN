@@ -15,7 +15,7 @@ CREATE TABLE public.user(
                             mail         VARCHAR (50) NOT NULL ,
                             password     VARCHAR (250) NOT NULL ,
                             UUID         VARCHAR (250) NOT NULL ,
-                            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP ,
+                            created_at   TIMESTAMP  NOT NULL ,
                             update_at    TIMESTAMP  NOT NULL  ,
                             CONSTRAINT user_PK PRIMARY KEY (id)
 )WITHOUT OIDS;
@@ -25,15 +25,7 @@ CREATE TABLE public.user(
 -- Table: Client
 ------------------------------------------------------------
 CREATE TABLE public.Client(
-                              id           INT  NOT NULL ,
-                              name         VARCHAR (50) NOT NULL ,
-                              surname      VARCHAR (50) NOT NULL ,
-                              lastname     VARCHAR (50) NOT NULL ,
-                              mail         VARCHAR (50) NOT NULL ,
-                              password     VARCHAR (250) NOT NULL ,
-                              UUID         VARCHAR (250) NOT NULL ,
-                              created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP ,
-                              update_at    TIMESTAMP  NOT NULL  ,
+                              id   INT  NOT NULL  ,
                               CONSTRAINT Client_PK PRIMARY KEY (id)
 
     ,CONSTRAINT Client_user_FK FOREIGN KEY (id) REFERENCES public.user(id)
@@ -44,15 +36,7 @@ CREATE TABLE public.Client(
 -- Table: Admin
 ------------------------------------------------------------
 CREATE TABLE public.Admin(
-                             id           INT  NOT NULL ,
-                             name         VARCHAR (50) NOT NULL ,
-                             surname      VARCHAR (50) NOT NULL ,
-                             lastname     VARCHAR (50) NOT NULL ,
-                             mail         VARCHAR (50) NOT NULL ,
-                             password     VARCHAR (250) NOT NULL ,
-                             UUID         VARCHAR (250) NOT NULL ,
-                             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP ,
-                             update_at    TIMESTAMP  NOT NULL  ,
+                             id   INT  NOT NULL  ,
                              CONSTRAINT Admin_PK PRIMARY KEY (id)
 
     ,CONSTRAINT Admin_user_FK FOREIGN KEY (id) REFERENCES public.user(id)
