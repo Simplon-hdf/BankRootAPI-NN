@@ -7,10 +7,8 @@ export type User = any;
 export class UsersProvider {
   constructor(private prisma: PrismaService) {}
 
-  async user(
-    userWereUniqueInput: Prisma.userWhereUniqueInput,
-  ): Promise<user | null> {
-    return this.prisma.user.findUnique({
+  async user(userWereUniqueInput: Prisma.userWhereInput): Promise<user | null> {
+    return this.prisma.user.findFirst({
       where: userWereUniqueInput,
     });
   }
