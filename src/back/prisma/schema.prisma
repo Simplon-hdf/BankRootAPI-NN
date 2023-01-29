@@ -7,58 +7,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model admin {
-  id           Int            @id(map: "admin_pk")
-  user         user           @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "admin_user_fk")
-  peut_gerer   peut_gerer[]
-  peut_valider peut_valider[]
-  traiter      traiter[]
-}
-
 model bank_account {
   id            Int             @id(map: "bank_account_pk") @default(autoincrement())
   currency      Int
   num_account   Int
   created_at    DateTime        @db.Timestamp(6)
   update_at     DateTime        @db.Timestamp(6)
-  peut_posseder peut_posseder[]
-  transaction   transaction[]
-}
-
-model client {
-  id            Int             @id(map: "client_pk")
-  user          user            @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "client_user_fk")
   peut_gerer    peut_gerer[]
   peut_posseder peut_posseder[]
-  request       request[]
   transaction   transaction[]
 }
 
 model peut_gerer {
-  id        Int
-  id_client Int
-  admin     admin  @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_gerer_admin_fk")
-  client    client @relation(fields: [id_client], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_gerer_client0_fk")
+  id           Int
+  id_user      Int
+  bank_account bank_account @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_gerer_bank_account_fk")
+  user         user         @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_gerer_user0_fk")
 
-  @@id([id, id_client], map: "peut_gerer_pk")
+  @@id([id, id_user], map: "peut_gerer_pk")
 }
 
 model peut_posseder {
-  id           Int
-  id_client    Int
-  bank_account bank_account @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_posseder_bank_account_fk")
-  client       client       @relation(fields: [id_client], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_posseder_client0_fk")
+  id              Int
+  id_bank_account Int
+  bank_account    bank_account @relation(fields: [id_bank_account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_posseder_bank_account0_fk")
+  user            user         @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_posseder_user_fk")
 
-  @@id([id, id_client], map: "peut_posseder_pk")
+  @@id([id, id_bank_account], map: "peut_posseder_pk")
 }
 
 model peut_valider {
-  id          Int
-  id_admin    Int
-  admin       admin       @relation(fields: [id_admin], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_valider_admin0_fk")
-  transaction transaction @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_valider_transaction_fk")
+  id             Int
+  id_transaction Int
+  transaction    transaction @relation(fields: [id_transaction], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_valider_transaction0_fk")
+  user           user        @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "peut_valider_user_fk")
 
-  @@id([id, id_admin], map: "peut_valider_pk")
+  @@id([id, id_transaction], map: "peut_valider_pk")
 }
 
 model request {
@@ -67,16 +51,16 @@ model request {
   request_type String    @db.VarChar(50)
   created_at   DateTime  @db.Timestamp(6)
   update_at    DateTime  @db.Timestamp(6)
-  id_client    Int
-  client       client    @relation(fields: [id_client], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "request_client_fk")
+  id_user      Int
+  user         user      @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "request_user_fk")
   traiter      traiter[]
 }
 
 model traiter {
   id         Int
   id_request Int
-  admin      admin   @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "traiter_admin_fk")
   request    request @relation(fields: [id_request], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "traiter_request0_fk")
+  user       user    @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "traiter_user_fk")
 
   @@id([id, id_request], map: "traiter_pk")
 }
@@ -88,22 +72,28 @@ model transaction {
   type            String         @db.VarChar(50)
   created_at      DateTime       @db.Timestamp(6)
   update_at       DateTime       @db.Timestamp(6)
-  id_client       Int
+  id_user         Int
   id_bank_account Int
   peut_valider    peut_valider[]
   bank_account    bank_account   @relation(fields: [id_bank_account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_bank_account0_fk")
-  client          client         @relation(fields: [id_client], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_client_fk")
+  user            user           @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_user_fk")
 }
 
 model user {
-  id         Int      @id @default(autoincrement())
-  name       String   @db.VarChar(50)
-  lastname   String   @db.VarChar(50)
-  mail       String   @db.VarChar(50)
-  password   String   @db.VarChar(250)
-  uuid       String   @db.VarChar(250)
-  created_at DateTime @db.Timestamp(6)
-  update_at  DateTime @db.Timestamp(6)
-  admin      admin?
-  client     client?
+  id            Int             @id(map: "user_pk") @default(autoincrement())
+  name          String          @db.VarChar(50)
+  lastname      String          @db.VarChar(50)
+  mail          String          @db.VarChar(50)
+  password      String          @db.VarChar(250)
+  uuid          String          @db.VarChar(250)
+  isadmin       Boolean
+  isclient      Boolean
+  created_at    DateTime        @db.Timestamp(6)
+  update_at     DateTime        @db.Timestamp(6)
+  peut_gerer    peut_gerer[]
+  peut_posseder peut_posseder[]
+  peut_valider  peut_valider[]
+  request       request[]
+  traiter       traiter[]
+  transaction   transaction[]
 }
