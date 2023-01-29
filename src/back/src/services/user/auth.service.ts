@@ -1,8 +1,20 @@
 import { Injectable } from '@nestjs/common';
+import { UsersProvider } from '../../providers/users/users.provider';
 
 @Injectable()
 export class AuthService {
-  login(email, password) {
-    return JSON.stringify({ mail : email, password: password});
+  constructor(private readonly usersProvider: UsersProvider) {}
+  async login(email, password) {
+    const user = await this.usersProvider.user(email);
+
+    if (user && user.password == password) {
+      const { password, ...result } = user;
+      return result;
+    }
+
+    return JSON.stringify({
+      code: 401,
+      error: 'Identifiant invalide',
+    });
   }
 }
