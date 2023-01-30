@@ -9,25 +9,21 @@ import { LoginDto } from './dto/login.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
-    private readonly prisma: PrismaService,
     private readonly usersProvider: UsersService,
-    private readonly authService: AuthService,
-
+    private jwtService: JwtService,
   ) {}
 
   async validateUser(loginDto: LoginDto): Promise<any> {
-    const user = await this.prisma.user.findFirst({
-      where: { mail: loginDto.mail },
+    const user = await this.usersProvider.user({
+      mail: loginDto.mail,
     });
-  bcrypt.compare(loginDto.password, user.password, function(err, result) {
-    if (result) {
-      return user;
-    } else {
-      return null;
-    }
-  });
-
+    bcrypt.compare(loginDto.password, user.password, function (err, result) {
+      if (result) {
+        return user;
+      } else {
+        return null;
+      }
+    });
   }
 
   async login(user: any) {
@@ -35,11 +31,5 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
-  }
-
-
-
-  create(createUserDto: CreateUserDto) {
-    return this.usersProvider.create(createUserDto);
   }
 }

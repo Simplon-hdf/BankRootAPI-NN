@@ -1,4 +1,12 @@
-import { Request, Controller, Post, UseGuards, Get, Body, Req } from '@nestjs/common';
+import {
+  Request,
+  Controller,
+  Post,
+  UseGuards,
+  Get,
+  Body,
+  Req,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { PrismaService } from '../prisma/prisma.service';
@@ -10,21 +18,18 @@ import { LoginDto } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly prisma: PrismaService, private readonly usersService: UsersService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
-
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req) {
-    return req.user;
+  login(@Request() req) {
+    return this.authService.login(req.user);
   }
   @Post('register')
-  async create(@Body() createUserDto: CreateUserDto) {
-    const password = await bcrypt.hash(createUserDto.password, 10);
-    console.log(password);
-    return this.usersService.create({ ...createUserDto, password });
-
+  register(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.createAccount(createUserDto);
   }
-
-
 }
