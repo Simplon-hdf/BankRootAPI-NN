@@ -6,8 +6,11 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategy/local.strategy';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { UsersModule } from '../users/users.module';
+import { PrismaModule } from '../prisma/prisma.module';
+import { AuthController } from './auth.controller';
 
 @Module({
+  controllers: [AuthController],
   imports: [
     UsersModule,
     PassportModule,
@@ -15,8 +18,9 @@ import { UsersModule } from '../users/users.module';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '1h' },
     }),
+    PrismaModule,
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthModule],
+  exports: [AuthService],
 })
 export class AuthModule {}
