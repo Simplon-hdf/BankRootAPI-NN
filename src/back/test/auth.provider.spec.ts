@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthProvider } from '../src/providers/users/auth.provider';
-
+import { AuthProvider } from './auth.provider';
 describe('LoginProvider', () => {
   let provider: AuthProvider;
 
