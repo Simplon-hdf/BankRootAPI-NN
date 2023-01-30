@@ -9,10 +9,10 @@ datasource db {
 
 model bank_account {
   id            Int             @id(map: "bank_account_pk") @default(autoincrement())
-  currency      Int
+  currency      Int             @default(0)
   num_account   Int
-  created_at    DateTime        @db.Timestamp(6)
-  update_at     DateTime        @db.Timestamp(6)
+  created_at    DateTime        @default(now())
+  update_at     DateTime        @default(now())
   peut_gerer    peut_gerer[]
   peut_posseder peut_posseder[]
   transaction   transaction[]
@@ -49,8 +49,8 @@ model request {
   id           Int       @id(map: "request_pk") @default(autoincrement())
   content      String    @db.VarChar(255)
   request_type String    @db.VarChar(50)
-  created_at   DateTime  @db.Timestamp(6)
-  update_at    DateTime  @db.Timestamp(6)
+  created_at   DateTime  @default(now())
+  update_at    DateTime  @default(now())
   id_user      Int
   user         user      @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "request_user_fk")
   traiter      traiter[]
@@ -70,8 +70,8 @@ model transaction {
   amount          Int
   state           Boolean
   type            String         @db.VarChar(50)
-  created_at      DateTime       @db.Timestamp(6)
-  update_at       DateTime       @db.Timestamp(6)
+  created_at      DateTime       @default(now())
+  update_at       DateTime       @default(now())
   id_user         Int
   id_bank_account Int
   peut_valider    peut_valider[]

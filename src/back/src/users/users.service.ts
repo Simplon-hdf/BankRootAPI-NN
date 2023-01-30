@@ -14,13 +14,45 @@ export class UsersService {
       where: userWereInput,
     });
   }
+  async create(data: Prisma.userCreateInput): Promise<user> {
+    return this.prisma.user.create({ data });
+  }
 
   async update(params: {
     where: Prisma.userWhereUniqueInput;
     data: Prisma.userUpdateInput;
   }): Promise<user> {
     const { where, data } = params;
-    return this.prisma.user.update({ data, where });
+    return this.prisma.user.update({
+      data,
+      where,
+    });
+  }
+
+  async createAccount(createUserDto: CreateUserDto) {
+    const user = await this.user({ mail: createUserDto.mail });
+
+    if (user) {
+      throw new HttpException('User exist', 200);
+    }
+
+    await this.create({
+      name: createUserDto.name,
+      lastname: createUserDto.lastname,
+      mail: createUserDto.mail,
+      created_at: createUserDto.created_at,
+      isadmin: false,
+      isclient: false,
+      password: createUserDto.password,
+      update_at: createUserDto.updated_at,
+      uuid: createUserDto.uuid,
+    });
+    return JSON.parse(
+      JSON.stringify({
+        statusCode: 200,
+        description: 'Create user successfuly',
+      }),
+    );
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordDto) {
