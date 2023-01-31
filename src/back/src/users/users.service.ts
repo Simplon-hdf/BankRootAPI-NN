@@ -1,8 +1,9 @@
-import { Body, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { Prisma, user } from '@prisma/client';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { use } from 'passport';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ResetPasswordDto } from './dto/reset-password.dto';
 
 export type User = any;
 @Injectable()
@@ -27,6 +28,12 @@ export class UsersService {
       data,
       where,
     });
+  }
+
+  async add_account(
+    data: Prisma.peut_possederCreateInput,
+  ): Promise<peut_posseder> {
+    return this.prisma.peut_posseder.create({ data });
   }
 
   async createAccount(createUserDto: CreateUserDto) {

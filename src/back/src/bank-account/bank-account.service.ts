@@ -4,6 +4,7 @@ import { UpdateBankAccountDto } from './dto/update-bank-account.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { bank_account, Prisma } from '@prisma/client';
 import { UsersService } from '../users/users.service';
+import { use } from 'passport';
 
 @Injectable()
 export class BankAccountService {
@@ -30,12 +31,25 @@ export class BankAccountService {
         uuid: createBankAccountDto.user_id,
       }),
       this.create({
-        created_at: Date.now().toString(),
-        update_at: Date.now().toString(),
+        created_at: new Date(),
+        update_at: new Date(),
         currency: 0,
         num_account: Date.now(),
       }),
     ]);
+
+    await this.usersService.add_account({
+      bank_account: {
+        connect: {
+          id: account.id,
+        },
+      },
+      user: {
+        connect: {
+          id: user.id,
+        },
+      },
+    });
 
     return 'This action adds a new bankAccount';
   }
