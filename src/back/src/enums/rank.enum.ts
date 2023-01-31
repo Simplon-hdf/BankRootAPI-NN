@@ -1,0 +1,4 @@
+enum RankEnum {
+  CLIENT,
+  ADMIN,
+}

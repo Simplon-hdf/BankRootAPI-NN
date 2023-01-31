@@ -48,8 +48,7 @@ export class UsersService {
       lastname: createUserDto.lastname,
       mail: createUserDto.mail,
       created_at: createUserDto.created_at,
-      isadmin: false,
-      isclient: false,
+      Rank: RankEnum.CLIENT,
       password: createUserDto.password,
       update_at: createUserDto.updated_at,
       uuid: createUserDto.uuid,
@@ -92,9 +91,5 @@ export class UsersService {
         mail: mail,
       },
     });
-  }
-
-  async createUser(createUserDto: CreateUserDto) {
-    return this.prisma.user.create({ data: createUserDto });
   }
 }
