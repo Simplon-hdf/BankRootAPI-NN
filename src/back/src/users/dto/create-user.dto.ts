@@ -6,5 +6,4 @@ export class CreateUserDto {
   uuid: string;
   created_at: Date;
   updated_at: Date;
-  rank: RankEnum;
 }

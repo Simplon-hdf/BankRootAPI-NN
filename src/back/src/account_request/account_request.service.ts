@@ -1,26 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateAccountRequestDto } from './dto/create-account_request.dto';
-import { UpdateAccountRequestDto } from './dto/update-account_request.dto';
+import { Prisma, request } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AccountRequestService {
-  create(createAccountRequestDto: CreateAccountRequestDto) {
-    return 'This action adds a new accountRequest';
+  constructor(
+    private prisma: PrismaService,
+    private readonly usersService: UsersService,
+  ) {}
+
+  async create(data: Prisma.requestCreateInput): Promise<request> {
+    return this.prisma.request.create({ data });
   }
 
-  findAll() {
-    return `This action returns all accountRequest`;
+  async requests(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.requestWhereUniqueInput;
+    where?: Prisma.requestWhereInput;
+    orderBy?: Prisma.requestOrderByWithRelationInput;
+  }): Promise<request[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+
+    return this.prisma.request.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} accountRequest`;
+  async request(
+    requestWhereInput: Prisma.requestWhereInput,
+  ): Promise<request | null> {
+    return this.prisma.request.findFirst({
+      where: requestWhereInput,
+    });
   }
 
-  update(id: number, updateAccountRequestDto: UpdateAccountRequestDto) {
-    return `This action updates a #${id} accountRequest`;
-  }
+  async createRequest(createAccountRequestDto: CreateAccountRequestDto) {
+    const user = await this.usersService.user({
+      uuid: createAccountRequestDto.user_uuid,
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} accountRequest`;
+    await this.create({
+      content: createAccountRequestDto.content,
+      request_type: createAccountRequestDto.type,
+      status: false,
+      user: {
+        connect: { id: user.id },
+      },
+    });
+
+    return { status: HttpStatus.OK, data: 'request send!' };
   }
 }

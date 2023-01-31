@@ -39,7 +39,7 @@ export class BankAccountService {
       }),
     ]);
 
-    await this.usersService.add_account({
+    await this.usersService.peut_posseder({
       bank_account: {
         connect: {
           id: account.id,

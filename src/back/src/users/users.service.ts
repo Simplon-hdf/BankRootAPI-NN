@@ -4,6 +4,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { use } from 'passport';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { RankEnum } from '../enums/rank.enum';
 
 export type User = any;
 @Injectable()
@@ -30,7 +31,7 @@ export class UsersService {
     });
   }
 
-  async add_account(
+  async peut_posseder(
     data: Prisma.peut_possederCreateInput,
   ): Promise<peut_posseder> {
     return this.prisma.peut_posseder.create({ data });
