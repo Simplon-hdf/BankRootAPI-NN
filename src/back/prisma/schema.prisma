@@ -89,7 +89,7 @@ model user {
   mail          String          @db.VarChar(50)
   password      String          @db.VarChar(250)
   uuid          String          @db.VarChar(250)
-  Rank          String
+  Rank          Int
   created_at    DateTime        @default(now())
   update_at     DateTime        @default(now())
   peut_gerer    peut_gerer[]

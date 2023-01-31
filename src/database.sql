@@ -30,7 +30,7 @@ CREATE TABLE public.Bank_Account(
                                     num_account         ,
                                     withdrawal_limit   INT  NOT NULL ,
                                     payment_ceiling    INT  NOT NULL ,
-                                    overdraft_limit    INT  NOT NULL ,
+                                         INT  NOT NULL ,
                                     created_at         TIMESTAMP  NOT NULL ,
                                     update_at          TIMESTAMP  NOT NULL  ,
                                     CONSTRAINT Bank_Account_PK PRIMARY KEY (id)
