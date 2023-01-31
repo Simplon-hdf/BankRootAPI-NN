@@ -31,8 +31,6 @@ export class BankAccountService {
         uuid: createBankAccountDto.user_id,
       }),
       this.create({
-        created_at: new Date(),
-        update_at: new Date(),
         currency: 0,
         num_account: Date.now(),
       }),
