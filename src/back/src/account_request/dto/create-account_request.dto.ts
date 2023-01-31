@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AccountRequestTypeEnum } from '../../enums/account_request_type.enum';
+import { AccountRequestTypeEnum } from '../../enums/ceiling_type.enum';
 
 export class CreateAccountRequestDto {
   @ApiProperty({

@@ -46,6 +46,17 @@ export class AccountRequestService {
       uuid: createAccountRequestDto.user_uuid,
     });
 
+    const existing_request = await this.request({
+      request_type: createAccountRequestDto.type,
+    });
+
+    if (existing_request) {
+      return {
+        status: HttpStatus.UNAUTHORIZED,
+        data: 'Already request incoming ',
+      };
+    }
+
     await this.create({
       content: createAccountRequestDto.content,
       request_type: createAccountRequestDto.type,
