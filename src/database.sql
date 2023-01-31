@@ -5,7 +5,7 @@
 
 
 ------------------------------------------------------------
--- Table: users
+-- Table: user
 ------------------------------------------------------------
 CREATE TABLE public.user(
                             id           SERIAL NOT NULL ,
@@ -14,8 +14,7 @@ CREATE TABLE public.user(
                             mail         VARCHAR (50) NOT NULL ,
                             password     VARCHAR (250) NOT NULL ,
                             UUID         VARCHAR (250) NOT NULL ,
-                            isAdmin      BOOL  NOT NULL ,
-                            isClient     BOOL  NOT NULL ,
+                            Rank         VARCHAR (50) NOT NULL ,
                             created_at   TIMESTAMP  NOT NULL ,
                             update_at    TIMESTAMP  NOT NULL  ,
                             CONSTRAINT user_PK PRIMARY KEY (id)
@@ -26,11 +25,14 @@ CREATE TABLE public.user(
 -- Table: Bank Account
 ------------------------------------------------------------
 CREATE TABLE public.Bank_Account(
-                                    id            SERIAL NOT NULL ,
-                                    currency      INT  NOT NULL ,
-                                    num_account   INT  NOT NULL ,
-                                    created_at    TIMESTAMP  NOT NULL ,
-                                    update_at     TIMESTAMP  NOT NULL  ,
+                                    id                 SERIAL NOT NULL ,
+                                    currency           INT  NOT NULL ,
+                                    num_account         ,
+                                    withdrawal_limit   INT  NOT NULL ,
+                                    payment_ceiling    INT  NOT NULL ,
+                                    overdraft_limit    INT  NOT NULL ,
+                                    created_at         TIMESTAMP  NOT NULL ,
+                                    update_at          TIMESTAMP  NOT NULL  ,
                                     CONSTRAINT Bank_Account_PK PRIMARY KEY (id)
 )WITHOUT OIDS;
 
