@@ -1,5 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { Prisma, user } from '@prisma/client';
+import { peut_posseder, Prisma, user } from '@prisma/client';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { use } from 'passport';
 import { PrismaService } from '../prisma/prisma.service';
