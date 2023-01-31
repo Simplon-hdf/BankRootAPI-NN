@@ -88,7 +88,7 @@ model user {
   uuid          String          @db.VarChar(250)
   isadmin       Boolean
   isclient      Boolean
-  created_at    DateTime       @default(now())
+  created_at    DateTime        @default(now())
   update_at     DateTime        @default(now())
   peut_gerer    peut_gerer[]
   peut_posseder peut_posseder[]
