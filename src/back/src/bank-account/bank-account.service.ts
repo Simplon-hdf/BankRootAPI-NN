@@ -33,6 +33,9 @@ export class BankAccountService {
       this.create({
         currency: 0,
         num_account: Date.now(),
+        withdrawal_limit: 0,
+        payment_ceiling: 0,
+        overdraft_limit: 0,
       }),
     ]);
 
