@@ -4,6 +4,7 @@ import { LocalAuthGuard } from './guard/local-auth.guard';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { UsersService } from '../users/users.service';
 @Controller('auth')
 export class AuthController {
   constructor(

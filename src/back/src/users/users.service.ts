@@ -1,9 +1,12 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Param } from '@nestjs/common';
 import { peut_posseder, Prisma, user } from '@prisma/client';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { use } from 'passport';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { RankEnum } from '../enums/rank.enum';
+import * as bcrypt from 'bcrypt';
 
 export type User = any;
 @Injectable()
@@ -37,6 +40,35 @@ export class UsersService {
     return this.prisma.user.update({
       data,
       where,
+    });
+  }
+
+  async findOne(id: number): Promise<user | undefined> {
+    return this.prisma.user.findFirst({
+      where: {
+        id: id,
+      },
+    });
+  }
+
+  findAll() {
+    return this.prisma.user.findMany();
+  }
+
+  async updateUser(params: {
+    where: Prisma.userWhereUniqueInput;
+    data: UpdateUserDto;
+  }): Promise<User> {
+    const { where, data } = params;
+    return this.prisma.user.update({
+      data,
+      where,
+    });
+  }
+
+  async remove(@Param('id') id: string): Promise<User> {
+    return this.prisma.user.delete({
+      where: { id: Number(id) },
     });
   }
 
@@ -96,41 +128,5 @@ export class UsersService {
     }
 
     throw new HttpException('Identifiant incorrecte', 401);
-  }
-
-  async findOne(id: number): Promise<user | undefined> {
-    return this.prisma.user.findFirst({
-      where: {
-        id: id,
-      },
-    });
-  }
-
-  findAll() {
-    return this.prisma.user.findMany();
-  }
-
-  async updateUser(params: {
-    where: Prisma.userWhereUniqueInput;
-    data: UpdateUserDto;
-  }): Promise<User> {
-    const { where, data } = params;
-    return this.prisma.user.update({
-      data,
-      where,
-    });
-  }
-
-  async remove(@Param('id') id: string): Promise<User> {
-    return this.prisma.user.delete({
-      where: { id: Number(id) },
-    });
-  }
-
-  update(id, updateUserDto: UpdateUserDto) {
-    return this.prisma.user.update({
-      where: { id: Number(id) },
-      data: updateUserDto,
-    });
   }
 }
