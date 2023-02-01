@@ -9,7 +9,7 @@ export class BankAccountController {
   constructor(private readonly bankAccountService: BankAccountService) {}
 
   @Post('/update-ceiling')
-  updateCeiling(updateCeilingDto: UpdateCeilingDto) {
+  updateCeiling(@Body() updateCeilingDto: UpdateCeilingDto) {
     return this.bankAccountService.updateCeiling(updateCeilingDto);
   }
 }

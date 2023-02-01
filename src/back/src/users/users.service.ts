@@ -96,7 +96,7 @@ export class UsersService {
       throw new HttpException('User exist', 200);
     }
 
-    await this.create({
+    const newUser = await this.create({
       name: createUserDto.name,
       lastname: createUserDto.lastname,
       mail: createUserDto.mail,
@@ -107,7 +107,7 @@ export class UsersService {
       uuid: createUserDto.uuid,
     });
 
-    await this.bankAccountService.createAccount(user.id);
+    await this.bankAccountService.createAccount(newUser.uuid);
 
     return JSON.parse(
       JSON.stringify({
