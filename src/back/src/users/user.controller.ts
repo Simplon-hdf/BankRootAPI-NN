@@ -1,27 +1,43 @@
 import {
   Request,
   Controller,
-  Post,
-  UseGuards,
   Get,
+  Put,
   Body,
+  Param,
+  Post,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UsersService } from './users.service';
-import { ResetPasswordDto } from './dto/reset-password.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly usersProvider: UsersService) {}
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    console.log(req.user);
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  findAll() {
+    return this.usersService.findAll();
+  }
+  @Post()
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
+  //find user by id
+  @Get(':id')
+  findOne(id: number) {
+    return this.usersService.findOne(id);
+  }
+  @Get('me')
+  findMe(@Request() req) {
     return req.user;
   }
-
-  @Post('reset_password')
-  resetPassword(@Body() resetPasswordRequestDto: ResetPasswordDto) {
-    return this.usersProvider.resetPassword(resetPasswordRequestDto);
+  //update
+  @Put(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.updateUser({
+      where: { id: Number(id) },
+      data: updateUserDto,
+    });
   }
 }
