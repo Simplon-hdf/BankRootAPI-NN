@@ -52,6 +52,7 @@ model request {
   id           Int       @id(map: "request_pk") @default(autoincrement())
   content      String    @db.VarChar(255)
   request_type String    @db.VarChar(50)
+  status       Boolean
   created_at   DateTime  @default(now())
   update_at    DateTime  @default(now())
   id_user      Int

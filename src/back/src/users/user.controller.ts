@@ -21,7 +21,7 @@ export class UserController {
   }
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    return this.usersService.createAccount(createUserDto);
   }
   //find user by id
   @Get(':id')
