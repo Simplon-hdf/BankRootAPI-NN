@@ -20,6 +20,7 @@ export type User = any;
 export class UsersService {
   constructor(
     private prisma: PrismaService,
+    @Inject(forwardRef(() => BankAccountService))
     private bankAccountService: BankAccountService,
   ) {}
 
