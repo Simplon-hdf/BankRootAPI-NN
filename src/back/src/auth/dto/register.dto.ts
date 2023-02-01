@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { RankEnum } from '../../enums/rank.enum';
 
 export class RegisterDto {
   @ApiProperty()
@@ -10,5 +11,9 @@ export class RegisterDto {
   @ApiProperty()
   password: string;
   @ApiProperty()
-  uuid: string;
+  created_at: Date;
+  @ApiProperty()
+  updated_at: Date;
+  @ApiProperty()
+  rank: RankEnum;
 }
