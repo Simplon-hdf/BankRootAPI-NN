@@ -1,9 +1,10 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Param } from '@nestjs/common';
 import { peut_posseder, Prisma, user } from '@prisma/client';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { use } from 'passport';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 export type User = any;
 @Injectable()
@@ -15,19 +16,18 @@ export class UsersService {
       where: userWereInput,
     });
   }
-  async create(data: Prisma.userCreateInput): Promise<user> {
-    return this.prisma.user.create({ data });
+
+  //find user by mail
+  async findUserByMail(mail: string): Promise<user | null> {
+    return this.prisma.user.findFirst({
+      where: {
+        mail: mail,
+      },
+    });
   }
 
-  async update(params: {
-    where: Prisma.userWhereUniqueInput;
-    data: Prisma.userUpdateInput;
-  }): Promise<user> {
-    const { where, data } = params;
-    return this.prisma.user.update({
-      data,
-      where,
-    });
+  async create(data: Prisma.userCreateInput): Promise<user> {
+    return this.prisma.user.create({ data });
   }
 
   async add_account(
@@ -48,7 +48,7 @@ export class UsersService {
       lastname: createUserDto.lastname,
       mail: createUserDto.mail,
       created_at: createUserDto.created_at,
-      Rank: RankEnum.CLIENT,
+      Rank: 0,
       password: createUserDto.password,
       update_at: createUserDto.updated_at,
       uuid: createUserDto.uuid,
@@ -61,22 +61,25 @@ export class UsersService {
     );
   }
 
-  async resetPassword(resetPasswordDto: ResetPasswordDto) {
-    const user = await this.user({ mail: resetPasswordDto.mail });
+  async resetPassword(
+    @Param('mail') mail: string,
+    resetPasswordDto: ResetPasswordDto,
+  ) {
+    const user = await this.findUserByMail(mail);
+    //hash and salt password
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(resetPasswordDto.new_password, salt);
     if (user) {
-      await this.update({
+      await this.prisma.user.update({
+        where: { id: user.id },
         data: {
-          password: resetPasswordDto.new_password,
-        },
-        where: {
-          id: user.id,
+          password: hash,
         },
       });
-
       return JSON.parse(
         JSON.stringify({
           statusCode: 200,
-          description: 'Mot de passe mis à jour',
+          description: 'Password reset successfuly',
         }),
       );
     }
@@ -84,12 +87,39 @@ export class UsersService {
     throw new HttpException('Identifiant incorrecte', 401);
   }
 
-  async findOne(mail: string): Promise<user | undefined> {
-    console.log(mail);
+  async findOne(id: number): Promise<user | undefined> {
     return this.prisma.user.findFirst({
       where: {
-        mail: mail,
+        id: id,
       },
+    });
+  }
+
+  findAll() {
+    return this.prisma.user.findMany();
+  }
+
+  async updateUser(params: {
+    where: Prisma.userWhereUniqueInput;
+    data: UpdateUserDto;
+  }): Promise<User> {
+    const { where, data } = params;
+    return this.prisma.user.update({
+      data,
+      where,
+    });
+  }
+
+  async remove(@Param('id') id: string): Promise<User> {
+    return this.prisma.user.delete({
+      where: { id: Number(id) },
+    });
+  }
+
+  update(id, updateUserDto: UpdateUserDto) {
+    return this.prisma.user.update({
+      where: { id: Number(id) },
+      data: updateUserDto,
     });
   }
 }

@@ -8,17 +8,17 @@ datasource db {
 }
 
 model bank_account {
-  id            Int             @id(map: "bank_account_pk") @default(autoincrement())
-  currency      Int             @default(0)
-  num_account   BigInt
+  id               Int             @id(map: "bank_account_pk") @default(autoincrement())
+  currency         Int             @default(0)
+  num_account      BigInt
   withdrawal_limit Int
-  payment_ceiling Int
-  overdraft_limit Int
-  created_at    DateTime        @default(now())
-  update_at     DateTime        @default(now())
-  peut_gerer    peut_gerer[]
-  peut_posseder peut_posseder[]
-  transaction   transaction[]
+  payment_ceiling  Int
+  overdraft_limit  Int
+  created_at       DateTime        @default(now())
+  update_at        DateTime        @default(now())
+  peut_gerer       peut_gerer[]
+  peut_posseder    peut_posseder[]
+  transaction      transaction[]
 }
 
 model peut_gerer {
@@ -89,7 +89,7 @@ model user {
   mail          String          @db.VarChar(50)
   password      String          @db.VarChar(250)
   uuid          String          @db.VarChar(250)
-  Rank          Int
+  Rank          Int             @default(0)
   created_at    DateTime        @default(now())
   update_at     DateTime        @default(now())
   peut_gerer    peut_gerer[]

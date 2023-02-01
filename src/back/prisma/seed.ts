@@ -11,7 +11,7 @@ async function main() {
       lastname: 'admin',
       uuid: 'test',
       password: 'test',
-      Rank: RankEnum.ADMIN,
+      Rank: 0,
       created_at: new Date(),
       update_at: new Date(),
     },
