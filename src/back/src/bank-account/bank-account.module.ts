@@ -9,8 +9,8 @@ import { AccountRequestService } from '../account_request/account_request.servic
 
 @Module({
   controllers: [BankAccountController],
-  imports: [PrismaModule, forwardRef(() => UsersModule), AccountRequestModule],
-  providers: [BankAccountService, AccountRequestService],
+  imports: [PrismaModule, AccountRequestModule, forwardRef(() => UsersModule)],
+  providers: [BankAccountService],
   exports: [BankAccountService],
 })
 export class BankAccountModule {}
