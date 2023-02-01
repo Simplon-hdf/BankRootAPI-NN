@@ -7,10 +7,8 @@ import {
 } from '@nestjs/common';
 import { peut_posseder, Prisma, user } from '@prisma/client';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { use } from 'passport';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { RankEnum } from '../enums/rank.enum';
 import { BankAccountService } from '../bank-account/bank-account.service';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -91,7 +89,23 @@ export class UsersService {
     return this.prisma.peut_posseder.create({ data });
   }
 
-  async createAccountWithRandomPassword(createUserDto: CreateUserDto) {}
+  genPassword() {
+    const chars =
+      '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const passwordLength = 12;
+    let password = '';
+    for (let i = 0; i <= passwordLength; i++) {
+      const randomNumber = Math.floor(Math.random() * chars.length);
+      password += chars.substring(randomNumber, randomNumber + 1);
+    }
+    return password;
+  }
+
+  async createAccountWithRandomPassword(createUserDto: CreateUserDto) {
+    const registerDto = createUserDto as RegisterDto;
+    registerDto.password = this.genPassword();
+    return this.createAccount(registerDto);
+  }
 
   async createAccount(registerDto: RegisterDto) {
     const user = await this.user({ mail: registerDto.mail });
@@ -99,15 +113,14 @@ export class UsersService {
     if (user) {
       throw new HttpException('User exist', 200);
     }
+    console.log(registerDto);
+
+    // salt and hash password
+    const salt = await bcrypt.genSalt();
+    registerDto.password = await bcrypt.hash(registerDto.password, salt);
 
     const newUser = await this.create({
-      name: registerDto.name,
-      lastname: registerDto.lastname,
-      mail: registerDto.mail,
-      created_at: registerDto.created_at,
-      Rank: RankEnum.CLIENT,
-      password: registerDto.password,
-      update_at: registerDto.updated_at,
+      ...registerDto,
       uuid: uuidv4(),
     });
 

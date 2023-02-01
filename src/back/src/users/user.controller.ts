@@ -42,7 +42,9 @@ export class UserController {
   @Post('/register')
   @ApiResponse({
     status: 200,
-    description: 'User a created !',
+    description: 'User as created !',
   })
-  register(@Body() createUserDto: CreateUserDto) {}
+  register(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.createAccountWithRandomPassword(createUserDto);
+  }
 }

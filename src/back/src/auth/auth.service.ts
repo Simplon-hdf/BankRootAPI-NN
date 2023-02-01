@@ -21,9 +21,6 @@ export class AuthService {
         message: 'User already exists',
       };
     } else {
-      // salt and hash password
-      const salt = await bcrypt.genSalt();
-      registerDto.password = await bcrypt.hash(registerDto.password, salt);
       return this.usersService.createAccount({ ...registerDto });
     }
   }
