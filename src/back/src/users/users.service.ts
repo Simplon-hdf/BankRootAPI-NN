@@ -14,12 +14,15 @@ import { RankEnum } from '../enums/rank.enum';
 import { BankAccountService } from '../bank-account/bank-account.service';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { RegisterDto } from '../auth/dto/register.dto';
+import { v4 as uuidv4 } from 'uuid';
 
 export type User = any;
 @Injectable()
 export class UsersService {
   constructor(
     private prisma: PrismaService,
+    @Inject(forwardRef(() => BankAccountService))
     private bankAccountService: BankAccountService,
   ) {}
 
@@ -88,18 +91,42 @@ export class UsersService {
     return this.prisma.peut_posseder.create({ data });
   }
 
-  async createAccount(createUserDto: CreateUserDto) {
-    const user = await this.user({ mail: createUserDto.mail });
+  genPassword() {
+    const chars =
+      '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const passwordLength = 12;
+    let password = '';
+    for (let i = 0; i <= passwordLength; i++) {
+      const randomNumber = Math.floor(Math.random() * chars.length);
+      password += chars.substring(randomNumber, randomNumber + 1);
+    }
+    return password;
+  }
+
+  async createAccountWithRandomPassword(createUserDto: CreateUserDto) {
+    const registerDto = createUserDto as RegisterDto;
+    registerDto.password = this.genPassword();
+    return this.createAccount(registerDto);
+  }
+
+  async createAccount(registerDto: RegisterDto) {
+    const user = await this.user({ mail: registerDto.mail });
 
     if (user) {
       throw new HttpException('User exist', 200);
     }
+    console.log(registerDto);
 
-    await this.create({
-      ...createUserDto,
+    // salt and hash password
+    const salt = await bcrypt.genSalt();
+    registerDto.password = await bcrypt.hash(registerDto.password, salt);
+
+    const newUser = await this.create({
+      ...registerDto,
+      uuid: uuidv4(),
     });
 
-    await this.bankAccountService.createAccount(user.id);
+    await this.bankAccountService.createAccount(newUser.uuid);
 
     return JSON.parse(
       JSON.stringify({

@@ -10,6 +10,7 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('user')
 export class UserController {
@@ -19,10 +20,7 @@ export class UserController {
   findAll() {
     return this.usersService.findAll();
   }
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.createAccount(createUserDto);
-  }
+
   //find user by id
   @Get(':id')
   findOne(id: number) {
@@ -39,5 +37,14 @@ export class UserController {
       where: { id: Number(id) },
       data: updateUserDto,
     });
+  }
+
+  @Post('/register')
+  @ApiResponse({
+    status: 200,
+    description: 'User as created !',
+  })
+  register(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.createAccountWithRandomPassword(createUserDto);
   }
 }
