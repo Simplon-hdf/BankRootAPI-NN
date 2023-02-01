@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateBankAccountDto } from './dto/create-bank-account.dto';
 import { UpdateBankAccountDto } from './dto/update-bank-account.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -11,7 +11,8 @@ import { UpdateCeilingDto } from './dto/update-ceiling.dto';
 export class BankAccountService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly usersService: UsersService,
+    @Inject(forwardRef(() => UsersService))
+    private usersService: UsersService,
   ) {}
 
   async create(data: Prisma.bank_accountCreateInput): Promise<bank_account> {
@@ -45,10 +46,10 @@ export class BankAccountService {
     });
   }
 
-  async createAccount(createBankAccountDto: CreateBankAccountDto) {
+  async createAccount(user_id) {
     const [user, account] = await Promise.all([
       this.usersService.user({
-        uuid: createBankAccountDto.user_id,
+        uuid: user_id,
       }),
       this.create({
         overdraft_limit: 100,

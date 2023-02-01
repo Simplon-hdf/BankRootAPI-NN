@@ -7,7 +7,7 @@ import { BankAccountModule } from './bank-account/bank-account.module';
 import { AccountRequestModule } from './account_request/account_request.module';
 
 @Module({
-  imports: [AuthModule, BankAccountModule, AccountRequestModule],
+  imports: [AuthModule, AccountRequestModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

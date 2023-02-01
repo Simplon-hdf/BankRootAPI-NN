@@ -1,15 +1,20 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { peut_posseder, Prisma, user } from '@prisma/client';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { use } from 'passport';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { RankEnum } from '../enums/rank.enum';
+import { BankAccountService } from '../bank-account/bank-account.service';
 
 export type User = any;
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(forwardRef(() => BankAccountService))
+    private bankAccountService: BankAccountService,
+  ) {}
 
   async user(userWereInput: Prisma.userWhereInput): Promise<user | null> {
     return this.prisma.user.findFirst({
@@ -54,6 +59,9 @@ export class UsersService {
       update_at: createUserDto.updated_at,
       uuid: createUserDto.uuid,
     });
+
+    await this.bankAccountService.createAccount(user.id);
+
     return JSON.parse(
       JSON.stringify({
         statusCode: 200,

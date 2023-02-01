@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AccountRequestTypeEnum } from '../../enums/ceiling_type.enum';
+import { CeilingTypeEnum } from '../../enums/ceiling_type.enum';
 
 export class CreateAccountRequestDto {
   @ApiProperty({
@@ -16,9 +16,9 @@ export class CreateAccountRequestDto {
   @ApiProperty({
     name: 'type',
     description: 'Type of request',
-    enum: AccountRequestTypeEnum,
-    enumName: 'AccountRequestTypeEnum',
+    enum: CeilingTypeEnum,
+    enumName: 'CeilingTypeEnum',
     // enum: ['OVERDRAFT_LIMIT', 'WITHDRAWAL_LIMIT', 'PAYMENT_CEILING'],
   })
-  type: AccountRequestTypeEnum;
+  type: CeilingTypeEnum;
 }
