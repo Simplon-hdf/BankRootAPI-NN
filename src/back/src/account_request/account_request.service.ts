@@ -41,6 +41,36 @@ export class AccountRequestService {
     });
   }
 
+  async fetchAll(): Promise<request[]> {
+    return this.prisma.request.findMany();
+  }
+
+  async getAllRequest() {
+    return this.fetchAll();
+  }
+
+  async getRequestsByUser(uuid) {
+    const user = await this.usersService.user({
+      uuid: uuid,
+    });
+
+    if (!user) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        data: 'Unknown user',
+      };
+    }
+
+    const request = await this.requests({
+      where: { user: user },
+    });
+
+    return {
+      status: HttpStatus.OK,
+      data: request,
+    };
+  }
+
   async createRequest(createAccountRequestDto: CreateAccountRequestDto) {
     const user = await this.usersService.user({
       uuid: createAccountRequestDto.user_uuid,
