@@ -51,10 +51,7 @@ export class AccountRequestService {
   }
 
   async getRequestsByUser(uuid) {
-    const user = await this.usersService.user({
-      uuid: uuid,
-    });
-
+    const user = await this.usersService.findUserByUUID(uuid);
     if (!user) {
       return {
         status: HttpStatus.BAD_REQUEST,
