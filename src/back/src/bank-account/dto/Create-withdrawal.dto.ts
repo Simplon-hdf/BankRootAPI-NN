@@ -4,7 +4,7 @@ export class CreateWithdrawalDto {
   @ApiProperty()
   amount: number;
   @ApiProperty()
-  num_account: string;
+  num_account: number;
   @ApiProperty()
   user_uuid: string;
 }

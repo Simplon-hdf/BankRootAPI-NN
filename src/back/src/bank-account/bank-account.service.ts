@@ -11,10 +11,11 @@ import { bank_account, Prisma } from '@prisma/client';
 import { UsersService } from '../users/users.service';
 import { UpdateCeilingDto } from './dto/update-ceiling.dto';
 import { CreateWithdrawalDto } from './dto/Create-withdrawal.dto';
-import { AccountRequestService } from '../account_request/account_request.service';
 import { CeilingTypeEnum } from '../enums/ceiling_type.enum';
+import { AccountRequestService } from '../account_request/account_request.service';
 
-const LIMIT = 1000000;
+const LIMIT = 100;
+
 @Injectable()
 export class BankAccountService {
   constructor(
@@ -66,9 +67,7 @@ export class BankAccountService {
 
   async createAccount(user_id) {
     const [user, account] = await Promise.all([
-      this.usersService.user({
-        uuid: user_id,
-      }),
+      this.usersService.findOne(user_id),
       this.create({
         overdraft_limit: 100,
         payment_ceiling: 500,
@@ -122,17 +121,11 @@ export class BankAccountService {
   }
 
   async withdrawal(@Body() withdrawalDto: CreateWithdrawalDto) {
-    const account = await this.findOne(+withdrawalDto.num_account);
+    const account = await this.findOneBankNum(withdrawalDto.num_account);
     if (!account) {
       return {
         status: HttpStatus.NOT_FOUND,
         data: 'Account not exist',
-      };
-    }
-    if (account.withdrawal_limit < withdrawalDto.amount) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        data: 'Withdrawal limit exceeded',
       };
     }
     if (account.payment_ceiling < withdrawalDto.amount) {

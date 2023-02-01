@@ -73,10 +73,9 @@ export class AccountRequestService {
   }
 
   async createRequest(createAccountRequestDto: CreateAccountRequestDto) {
-    const user = await this.usersService.user({
-      uuid: createAccountRequestDto.user_uuid,
-    });
-
+    const user = await this.usersService.findUserByUUID(
+      createAccountRequestDto.user_uuid,
+    );
     const existing_request = await this.request({
       request_type: createAccountRequestDto.type,
     });

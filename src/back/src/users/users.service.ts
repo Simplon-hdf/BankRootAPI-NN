@@ -14,8 +14,6 @@ import { RankEnum } from '../enums/rank.enum';
 import { BankAccountService } from '../bank-account/bank-account.service';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { RegisterDto } from '../auth/dto/register.dto';
-import { v4 as uuidv4 } from 'uuid';
 
 export type User = any;
 @Injectable()
@@ -26,9 +24,12 @@ export class UsersService {
     private bankAccountService: BankAccountService,
   ) {}
 
-  async user(userWereInput: Prisma.userWhereInput): Promise<user | null> {
+  //find user by UUID
+  async findUserByUUID(uuid: string): Promise<user | null> {
     return this.prisma.user.findFirst({
-      where: userWereInput,
+      where: {
+        uuid: uuid,
+      },
     });
   }
 
@@ -91,42 +92,18 @@ export class UsersService {
     return this.prisma.peut_posseder.create({ data });
   }
 
-  genPassword() {
-    const chars =
-      '0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const passwordLength = 12;
-    let password = '';
-    for (let i = 0; i <= passwordLength; i++) {
-      const randomNumber = Math.floor(Math.random() * chars.length);
-      password += chars.substring(randomNumber, randomNumber + 1);
-    }
-    return password;
-  }
-
-  async createAccountWithRandomPassword(createUserDto: CreateUserDto) {
-    const registerDto = createUserDto as RegisterDto;
-    registerDto.password = this.genPassword();
-    return this.createAccount(registerDto);
-  }
-
-  async createAccount(registerDto: RegisterDto) {
-    const user = await this.user({ mail: registerDto.mail });
+  async createAccount(createUserDto: CreateUserDto) {
+    const user = await this.findUserByMail(createUserDto.mail);
 
     if (user) {
       throw new HttpException('User exist', 200);
     }
-    console.log(registerDto);
-
-    // salt and hash password
-    const salt = await bcrypt.genSalt();
-    registerDto.password = await bcrypt.hash(registerDto.password, salt);
 
     const newUser = await this.create({
-      ...registerDto,
-      uuid: uuidv4(),
+      ...createUserDto,
     });
 
-    await this.bankAccountService.createAccount(newUser.uuid);
+    await this.bankAccountService.createAccount(newUser.id);
 
     return JSON.parse(
       JSON.stringify({
@@ -155,7 +132,7 @@ export class UsersService {
       return JSON.parse(
         JSON.stringify({
           statusCode: 200,
-          description: 'Password reset successfuly',
+          description: 'Password reset successfully',
         }),
       );
     }

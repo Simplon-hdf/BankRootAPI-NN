@@ -9,9 +9,11 @@ export class CreateUserDto {
   @ApiProperty()
   mail: string;
   @ApiProperty()
+  password: string;
+  @ApiProperty()
+  uuid: string;
+  @ApiProperty()
   created_at: Date;
   @ApiProperty()
-  updated_at: Date;
-  @ApiProperty()
-  rank: RankEnum;
+  Rank: RankEnum;
 }
