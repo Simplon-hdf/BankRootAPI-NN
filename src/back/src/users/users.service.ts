@@ -1,10 +1,9 @@
-import { HttpException, Injectable, Param } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { peut_posseder, Prisma, user } from '@prisma/client';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { use } from 'passport';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import * as bcrypt from 'bcrypt';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 export type User = any;
 @Injectable()
@@ -30,7 +29,18 @@ export class UsersService {
     return this.prisma.user.create({ data });
   }
 
-  async add_account(
+  async update(params: {
+    where: Prisma.userWhereUniqueInput;
+    data: Prisma.userUpdateInput;
+  }): Promise<user> {
+    const { where, data } = params;
+    return this.prisma.user.update({
+      data,
+      where,
+    });
+  }
+
+  async peut_posseder(
     data: Prisma.peut_possederCreateInput,
   ): Promise<peut_posseder> {
     return this.prisma.peut_posseder.create({ data });
@@ -48,7 +58,7 @@ export class UsersService {
       lastname: createUserDto.lastname,
       mail: createUserDto.mail,
       created_at: createUserDto.created_at,
-      Rank: 0,
+      Rank: RankEnum.CLIENT,
       password: createUserDto.password,
       update_at: createUserDto.updated_at,
       uuid: createUserDto.uuid,
@@ -76,6 +86,7 @@ export class UsersService {
           password: hash,
         },
       });
+
       return JSON.parse(
         JSON.stringify({
           statusCode: 200,

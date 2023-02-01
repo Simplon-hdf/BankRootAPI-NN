@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBankAccountDto } from './dto/create-bank-account.dto';
 import { UpdateBankAccountDto } from './dto/update-bank-account.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { bank_account, Prisma } from '@prisma/client';
 import { UsersService } from '../users/users.service';
 import { use } from 'passport';
+import { UpdateCeilingDto } from './dto/update-ceiling.dto';
 
 @Injectable()
 export class BankAccountService {
@@ -17,11 +18,30 @@ export class BankAccountService {
     return this.prisma.bank_account.create({ data });
   }
 
+  async update(params: {
+    where: Prisma.bank_accountWhereUniqueInput;
+    data: Prisma.bank_accountUpdateInput;
+  }): Promise<bank_account> {
+    const { where, data } = params;
+    return this.prisma.bank_account.update({
+      data,
+      where,
+    });
+  }
+
   async findOne(
     accountWhereUniqueInput: Prisma.bank_accountWhereUniqueInput,
   ): Promise<bank_account | null> {
     return this.prisma.bank_account.findFirst({
       where: accountWhereUniqueInput,
+    });
+  }
+
+  async bank_account(
+    bank_accountWhereInput: Prisma.bank_accountWhereInput,
+  ): Promise<bank_account | null> {
+    return this.prisma.bank_account.findFirst({
+      where: bank_accountWhereInput,
     });
   }
 
@@ -31,15 +51,15 @@ export class BankAccountService {
         uuid: createBankAccountDto.user_id,
       }),
       this.create({
+        overdraft_limit: 100,
+        payment_ceiling: 500,
+        withdrawal_limit: 500,
         currency: 0,
         num_account: Date.now(),
-        withdrawal_limit: 500,
-        payment_ceiling: 500,
-        overdraft_limit: 100,
       }),
     ]);
 
-    await this.usersService.add_account({
+    await this.usersService.peut_posseder({
       bank_account: {
         connect: {
           id: account.id,
@@ -53,5 +73,32 @@ export class BankAccountService {
     });
 
     return 'This action adds a new bankAccount';
+  }
+
+  async updateCeiling(updateCeilingDto: UpdateCeilingDto) {
+    const account = await this.bank_account({
+      num_account: updateCeilingDto.account_num,
+    });
+
+    if (!account) {
+      return {
+        status: HttpStatus.NOT_FOUND,
+        data: 'Account not exist',
+      };
+    }
+
+    await this.update({
+      where: {
+        id: account.id,
+      },
+      data: {
+        [updateCeilingDto.type.toLowerCase()]: updateCeilingDto.new_value,
+      },
+    });
+
+    return {
+      status: HttpStatus.OK,
+      data: 'Account ceiling update',
+    };
   }
 }

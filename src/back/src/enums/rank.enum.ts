@@ -1,4 +1,4 @@
-enum RankEnum {
+export enum RankEnum {
   CLIENT,
   ADMIN,
 }
