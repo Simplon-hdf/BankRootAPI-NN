@@ -1,18 +1,27 @@
-import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { CreateBankAccountDto } from './dto/create-bank-account.dto';
-import { UpdateBankAccountDto } from './dto/update-bank-account.dto';
+import {
+  Body,
+  forwardRef,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
+
 import { PrismaService } from '../prisma/prisma.service';
 import { bank_account, Prisma } from '@prisma/client';
 import { UsersService } from '../users/users.service';
-import { use } from 'passport';
 import { UpdateCeilingDto } from './dto/update-ceiling.dto';
+import { CreateWithdrawalDto } from './dto/Create-withdrawal.dto';
+import { AccountRequestService } from '../account_request/account_request.service';
+import { CeilingTypeEnum } from '../enums/ceiling_type.enum';
 
+const LIMIT = 1000000;
 @Injectable()
 export class BankAccountService {
   constructor(
     private readonly prisma: PrismaService,
     @Inject(forwardRef(() => UsersService))
     private usersService: UsersService,
+    private requestService: AccountRequestService,
   ) {}
 
   async create(data: Prisma.bank_accountCreateInput): Promise<bank_account> {
@@ -30,11 +39,20 @@ export class BankAccountService {
     });
   }
 
-  async findOne(
-    accountWhereUniqueInput: Prisma.bank_accountWhereUniqueInput,
-  ): Promise<bank_account | null> {
+  async findOne(id: number): Promise<bank_account | undefined> {
     return this.prisma.bank_account.findFirst({
-      where: accountWhereUniqueInput,
+      where: {
+        id: id,
+      },
+    });
+  }
+  async findOneBankNum(
+    bank_account: number,
+  ): Promise<bank_account | undefined> {
+    return this.prisma.bank_account.findFirst({
+      where: {
+        num_account: bank_account,
+      },
     });
   }
 
@@ -101,5 +119,40 @@ export class BankAccountService {
       status: HttpStatus.OK,
       data: 'Account ceiling update',
     };
+  }
+
+  async withdrawal(@Body() withdrawalDto: CreateWithdrawalDto) {
+    const account = await this.findOne(+withdrawalDto.num_account);
+    if (!account) {
+      return {
+        status: HttpStatus.NOT_FOUND,
+        data: 'Account not exist',
+      };
+    }
+    if (account.withdrawal_limit < withdrawalDto.amount) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        data: 'Withdrawal limit exceeded',
+      };
+    }
+    if (account.payment_ceiling < withdrawalDto.amount) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        data: 'Payment ceiling exceeded',
+      };
+    }
+    if (account.overdraft_limit < withdrawalDto.amount) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        data: 'Overdraft limit exceeded',
+      };
+    }
+    if (withdrawalDto.amount > LIMIT) {
+      await this.requestService.createRequest({
+        content: 'Ask withdraw of' + withdrawalDto.amount,
+        user_uuid: withdrawalDto.user_uuid,
+        type: CeilingTypeEnum.WITHDRAWAL_LIMIT,
+      });
+    }
   }
 }
