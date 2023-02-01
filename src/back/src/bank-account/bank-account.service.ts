@@ -96,7 +96,7 @@ export class BankAccountService {
 
   async updateCeiling(updateCeilingDto: UpdateCeilingDto) {
     const account = await this.bank_account({
-      num_account: updateCeilingDto.account_num,
+      num_account: parseInt(String(updateCeilingDto.account_num)),
     });
 
     if (!account) {
