@@ -1,8 +1,7 @@
-import { Controller, Post, Body, UseGuards, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { BankAccountService } from './bank-account.service';
-import { CreateBankAccountDto } from './dto/create-bank-account.dto';
-import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UpdateCeilingDto } from './dto/update-ceiling.dto';
+import { CreateWithdrawalDto } from './dto/Create-withdrawal.dto';
 
 @Controller('bank-account')
 export class BankAccountController {
@@ -11,5 +10,14 @@ export class BankAccountController {
   @Post('/update-ceiling')
   updateCeiling(updateCeilingDto: UpdateCeilingDto) {
     return this.bankAccountService.updateCeiling(updateCeilingDto);
+  }
+  @Get('/:id')
+  findOne(id: number) {
+    return this.bankAccountService.findOne(id);
+  }
+  //retrait
+  @Post('/:id/withdrawal')
+  withdrawal(@Body() createWithdrawalDto: CreateWithdrawalDto) {
+    return this.bankAccountService.withdrawal(createWithdrawalDto);
   }
 }

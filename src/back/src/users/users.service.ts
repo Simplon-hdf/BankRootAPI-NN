@@ -97,14 +97,7 @@ export class UsersService {
     }
 
     await this.create({
-      name: createUserDto.name,
-      lastname: createUserDto.lastname,
-      mail: createUserDto.mail,
-      created_at: createUserDto.created_at,
-      Rank: RankEnum.CLIENT,
-      password: createUserDto.password,
-      update_at: createUserDto.updated_at,
-      uuid: createUserDto.uuid,
+      ...createUserDto,
     });
 
     await this.bankAccountService.createAccount(user.id);
