@@ -8,8 +8,8 @@ import { UpdateCeilingDto } from './dto/update-ceiling.dto';
 export class BankAccountController {
   constructor(private readonly bankAccountService: BankAccountService) {}
 
-  @Post()
-  updateCeiling(updateCelingDto: UpdateCeilingDto) {
-    return this.bankAccountService.updateCeiling(updateCelingDto);
+  @Post('/update-ceiling')
+  updateCeiling(updateCeilingDto: UpdateCeilingDto) {
+    return this.bankAccountService.updateCeiling(updateCeilingDto);
   }
 }

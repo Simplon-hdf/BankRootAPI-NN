@@ -17,7 +17,7 @@ export class CreateAccountRequestDto {
     name: 'type',
     description: 'Type of request',
     enum: CeilingTypeEnum,
-    enumName: 'AccountRequestTypeEnum',
+    enumName: 'CeilingTypeEnum',
     // enum: ['OVERDRAFT_LIMIT', 'WITHDRAWAL_LIMIT', 'PAYMENT_CEILING'],
   })
   type: CeilingTypeEnum;
