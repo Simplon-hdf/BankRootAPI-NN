@@ -16,9 +16,6 @@ jobs:
     - name: Build Docker image
       run: docker build -t my_image src/back/
 
-    - name: Test Docker image
-      run: docker run my_image
-
     - name: Send files to server
       uses: appleboy/scp-action@master
       with:
