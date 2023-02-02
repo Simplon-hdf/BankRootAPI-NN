@@ -1,8 +1,5 @@
 # docker-compose.yml
-
-
-version:'1.21.0'
-
+version: '1.21'
 services:
   nest:
     image: nest/bankroot:v1
@@ -24,11 +21,11 @@ services:
     ports:
       - '5432:5432'
     networks:
-        - postgres-network
+      - postgres-network
 
 volumes:
   postgres:
 
 networks:
- postgres-network:
-   driver: bridge
+  postgres-network:
+    driver: bridge
