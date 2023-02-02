@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { bank_account, Prisma } from '@prisma/client';
+import { bank_account, Prisma, user } from '@prisma/client';
 import { UsersService } from '../users/users.service';
 import { UpdateCeilingDto } from './dto/update-ceiling.dto';
 import { CreateWithdrawalDto } from './dto/Create-withdrawal.dto';
@@ -44,6 +44,12 @@ export class BankAccountService {
       where: {
         id: id,
       },
+    });
+  }
+
+  async findAccountWithUser(user: user) {
+    return this.prisma.peut_posseder.findFirst({
+      where: { user: user },
     });
   }
   async findOneBankNum(
