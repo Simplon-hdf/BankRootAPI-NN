@@ -1,7 +1,6 @@
 # docker-compose.yml
 
 services:
-  version: '1.21'
   nest:
     image: nest/bankroot:v1
     restart: always
