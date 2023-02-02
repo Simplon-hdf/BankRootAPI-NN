@@ -1,5 +1,8 @@
 # docker-compose.yml
-version:1
+
+
+version:'1.21.0'
+
 services:
   nest:
     image: nest/bankroot:v1
