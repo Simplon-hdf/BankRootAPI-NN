@@ -1,0 +1,47 @@
+name: Build, Test and Deploy Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DOCKER_COMPOSE_VERSION: 1.27.4
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker environment
+      uses: docker/setup-docker@v2
+      with:
+        docker-version: 20.10.2
+
+    - name: Build Docker image
+      run: |
+        docker build -t myimage .
+
+    - name: Test Docker image with docker-compose
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install curl
+        curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        chmod +x /usr/local/bin/docker-compose
+        docker-compose up --exit-code-from tests
+
+
+
+    - name: Copy Dockerfile and docker-compose to SSH server
+      uses: appleboy/scp-action@main
+      with:
+        host: myserver.com
+        username: myuser
+        password: ${{ secrets.SSH_PASSWORD }}
+        source: |
+          Dockerfile
+          docker-compose.yml
+        target: /home/myuser/myapp
