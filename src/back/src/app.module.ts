@@ -5,9 +5,10 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma/prisma.service';
 import { BankAccountModule } from './bank-account/bank-account.module';
 import { AccountRequestModule } from './account_request/account_request.module';
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
-  imports: [AuthModule, AccountRequestModule, BankAccountModule],
+  imports: [AuthModule, AccountRequestModule, BankAccountModule, TransactionModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
