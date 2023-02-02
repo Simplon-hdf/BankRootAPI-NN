@@ -28,7 +28,9 @@ export class BankAccountService {
     return this.prisma.bank_account.create({ data });
   }
 
-  async findOne(num_account: number): Promise<bank_account | undefined> {
+  async findByNumAccount(
+    num_account: number,
+  ): Promise<bank_account | undefined> {
     return this.prisma.bank_account.findFirst({
       where: {
         num_account: num_account,
