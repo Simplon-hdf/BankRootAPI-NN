@@ -23,7 +23,7 @@ jobs:
         username: debian
         password: ${{ secrets.SERVER_PASSWORD }}
         source: src/back/
-        target: .home
+        target: /home
 
     - name: Deploy to server
       uses: appleboy/ssh-action@master
