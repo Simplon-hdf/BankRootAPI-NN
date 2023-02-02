@@ -4,6 +4,8 @@ import { UsersService } from '../users/users.service';
 import { Prisma, transaction } from '@prisma/client';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { BankAccountService } from '../bank-account/bank-account.service';
+import { TransactionByUserDto } from './dto/transaction-by-user.dto';
+import { TransactionByBankaccountDto } from './dto/transaction-by-bankaccount.dto';
 
 @Injectable()
 export class TransactionService {
@@ -27,6 +29,26 @@ export class TransactionService {
 
   async fetchAllTransactions(): Promise<transaction[]> {
     return this.prisma.transaction.findMany();
+  }
+
+  async fetchByUser(transactionByUserDto: TransactionByUserDto) {
+    return {
+      statusCode: HttpStatus.OK,
+      data: this.transactions({
+        user: { uuid: transactionByUserDto.user_uuid },
+      }),
+    };
+  }
+
+  async fetchByBankAccount(
+    transactionByBankaccountDto: TransactionByBankaccountDto,
+  ) {
+    return {
+      statusCode: HttpStatus.OK,
+      data: this.transactions({
+        bank_account: { num_account: transactionByBankaccountDto.account_num },
+      }),
+    };
   }
 
   async createTransaction(createTransactionDto: CreateTransactionDto) {
