@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { bank_account, Prisma } from '@prisma/client';
+import { bank_account, Prisma, user } from '@prisma/client';
 import { UsersService } from '../users/users.service';
 import { UpdateCeilingDto } from './dto/update-ceiling.dto';
 import { CreateWithdrawalDto } from './dto/Create-withdrawal.dto';
@@ -28,7 +28,9 @@ export class BankAccountService {
     return this.prisma.bank_account.create({ data });
   }
 
-  async findOne(num_account: number): Promise<bank_account | undefined> {
+  async findByNumAccount(
+    num_account: number,
+  ): Promise<bank_account | undefined> {
     return this.prisma.bank_account.findFirst({
       where: {
         num_account: num_account,
@@ -44,6 +46,29 @@ export class BankAccountService {
     return this.prisma.bank_account.update({
       data,
       where,
+    });
+  }
+
+  async findOne(id: number): Promise<bank_account | undefined> {
+    return this.prisma.bank_account.findFirst({
+      where: {
+        id: id,
+      },
+    });
+  }
+
+  async findAccountWithUser(user: user) {
+    return this.prisma.peut_posseder.findFirst({
+      where: { user: user },
+    });
+  }
+  async findOneBankNum(
+    bank_account: number,
+  ): Promise<bank_account | undefined> {
+    return this.prisma.bank_account.findFirst({
+      where: {
+        num_account: bank_account,
+      },
     });
   }
 
