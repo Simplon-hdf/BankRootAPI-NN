@@ -13,7 +13,7 @@ async function main() {
       password: 'test',
       rank: 1,
       created_at: new Date(),
-      update_at: new Date(),
+      updated_at: new Date(),
     },
   });
   console.log({ user });
