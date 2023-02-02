@@ -1,0 +1,86 @@
+Dictionnaire de données 
+
+Nom : name
+Code : NAME
+Type : VARCHAR
+Taille : 50,
+Commentaire : 
+
+Nom : surname
+Code : SURNAME
+Type : VARCHAR
+Taille : 50,
+Commentaire : 
+
+Nom : lastname
+Code : LASTNAME
+Type : VARCHAR
+Taille : 50,
+Commentaire : 
+
+Nom : mail
+Code : MAIL
+Type : VARCHAR
+Taille : 50,
+Commentaire : 
+
+Nom : password
+Code : PASSWORD
+Type : VARCHAR
+Taille : 250,
+Commentaire : 
+
+Nom : UUID
+Code : UUID
+Type : VARCHAR
+Taille : 250,
+Commentaire : 
+
+Nom : currency
+Code : CURRENCY
+Type : INT
+Taille : 11,
+Commentaire : 
+
+Nom : state
+Code : STATE
+Type : BOOL
+Taille : 2,
+Commentaire : 
+
+Nom : amount
+Code : AMOUNT
+Type : INT
+Taille : 11,
+Commentaire : 
+
+Nom : num_account
+Code : NUM_ACCOUNT
+Type : INT
+Taille : 11,
+Commentaire : 
+
+Nom : id
+Code : ID
+Type : AUTO_INCREMENT
+Taille : 11,
+Commentaire : 
+
+Nom : type
+Code : TYPE
+Type : VARCHAR
+Taille : 50,
+Commentaire : 
+
+Nom : content
+Code : CONTENT
+Type : VARCHAR
+Taille : 255,
+Commentaire : 
+
+Nom : request_type
+Code : REQUEST_TYPE
+Type : VARCHAR
+Taille : 50,
+Commentaire : 
+
