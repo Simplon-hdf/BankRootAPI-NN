@@ -20,4 +20,9 @@ export class BankAccountController {
   withdrawal(@Body() createWithdrawalDto: CreateWithdrawalDto) {
     return this.bankAccountService.withdrawal(createWithdrawalDto);
   }
+  //depot
+  @Post('/:id/deposit')
+  deposit(@Body() createWithdrawalDto: CreateWithdrawalDto) {
+    return this.bankAccountService.deposit(createWithdrawalDto);
+  }
 }

@@ -14,7 +14,7 @@ import { CreateWithdrawalDto } from './dto/Create-withdrawal.dto';
 import { AccountRequestService } from '../account_request/account_request.service';
 import { CeilingTypeEnum } from '../enums/ceiling_type.enum';
 
-const LIMIT = 1000000;
+const LIMIT = 10;
 @Injectable()
 export class BankAccountService {
   constructor(
@@ -28,6 +28,14 @@ export class BankAccountService {
     return this.prisma.bank_account.create({ data });
   }
 
+  async findOne(num_account: number): Promise<bank_account | undefined> {
+    return this.prisma.bank_account.findFirst({
+      where: {
+        num_account: num_account,
+      },
+    });
+  }
+
   async update(params: {
     where: Prisma.bank_accountWhereUniqueInput;
     data: Prisma.bank_accountUpdateInput;
@@ -39,28 +47,23 @@ export class BankAccountService {
     });
   }
 
-  async findOne(id: number): Promise<bank_account | undefined> {
-    return this.prisma.bank_account.findFirst({
-      where: {
-        id: id,
-      },
-    });
-  }
-  async findOneBankNum(
-    bank_account: number,
-  ): Promise<bank_account | undefined> {
-    return this.prisma.bank_account.findFirst({
-      where: {
-        num_account: bank_account,
-      },
-    });
-  }
-
   async bank_account(
     bank_accountWhereInput: Prisma.bank_accountWhereInput,
   ): Promise<bank_account | null> {
     return this.prisma.bank_account.findFirst({
       where: bank_accountWhereInput,
+    });
+  }
+
+  //update amount
+  async updateAmount(params: {
+    where: any;
+    data: Prisma.bank_accountUpdateInput;
+  }): Promise<bank_account> {
+    const { where, data } = params;
+    return this.prisma.bank_account.update({
+      data,
+      where,
     });
   }
 
@@ -77,6 +80,8 @@ export class BankAccountService {
         num_account: Date.now(),
       }),
     ]);
+
+    //update amount bank account
 
     await this.usersService.peut_posseder({
       bank_account: {
@@ -122,7 +127,10 @@ export class BankAccountService {
   }
 
   async withdrawal(@Body() withdrawalDto: CreateWithdrawalDto) {
-    const account = await this.findOne(+withdrawalDto.num_account);
+    const account = await this.bank_account({
+      num_account: parseInt(String(withdrawalDto.num_account)),
+    });
+
     if (!account) {
       return {
         status: HttpStatus.NOT_FOUND,
@@ -147,12 +155,67 @@ export class BankAccountService {
         data: 'Overdraft limit exceeded',
       };
     }
+    if (account.currency < withdrawalDto.amount) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        data: 'Insufficient balance',
+      };
+    }
     if (withdrawalDto.amount > LIMIT) {
       await this.requestService.createRequest({
         content: 'Ask withdraw of' + withdrawalDto.amount,
         user_uuid: withdrawalDto.user_uuid,
         type: CeilingTypeEnum.WITHDRAWAL_LIMIT,
       });
+    } else {
+      console.log(account);
+      await this.updateAmount({
+        where: {
+          id: account.id,
+        },
+        data: {
+          currency: account.currency - withdrawalDto.amount,
+        },
+      });
     }
+  }
+
+  //add currency
+  async addCurrency(createWithdrawalDto: CreateWithdrawalDto) {
+    const account = await this.bank_account({
+      num_account: parseInt(String(createWithdrawalDto.num_account)),
+    });
+    if (!account) {
+      return {
+        status: HttpStatus.NOT_FOUND,
+        data: 'Account not exist',
+      };
+    }
+    await this.updateAmount({
+      where: {
+        id: account.id,
+      },
+      data: {
+        currency: account.currency + createWithdrawalDto.amount,
+      },
+    });
+  }
+
+  deposit(createWithdrawalDto: CreateWithdrawalDto) {
+    //create a message just for deposit
+    if (createWithdrawalDto.amount > LIMIT) {
+      this.requestService
+        .createRequest({
+          content: 'Ask deposit of' + createWithdrawalDto.amount,
+          user_uuid: createWithdrawalDto.user_uuid,
+          type: CeilingTypeEnum.PAYMENT_CEILING,
+        })
+        .then((r) => console.log(r));
+      return {
+        status: HttpStatus.UNAUTHORIZED,
+        data: 'Deposit limit exceeded',
+      };
+    }
+    return this.addCurrency(createWithdrawalDto);
   }
 }
