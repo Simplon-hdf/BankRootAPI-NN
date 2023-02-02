@@ -38,10 +38,10 @@ jobs:
     - name: Copy Dockerfile and docker-compose to SSH server
       uses: appleboy/scp-action@main
       with:
-        host: myserver.com
-        username: myuser
+        host: 152.228.163.78
+        username: debian
         password: ${{ secrets.SSH_PASSWORD }}
         source: |
           Dockerfile
           docker-compose.yml
-        target: /home/myuser/myapp
+        target: /home/
