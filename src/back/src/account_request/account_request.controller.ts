@@ -12,7 +12,7 @@ import { CreateAccountRequestDto } from './dto/create-account_request.dto';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('account-request')
-@ApiTags('Account Requests')
+@ApiTags('Account Requests test')
 export class AccountRequestController {
   constructor(private readonly accountRequestService: AccountRequestService) {}
 
