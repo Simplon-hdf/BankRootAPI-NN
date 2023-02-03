@@ -87,4 +87,8 @@ export class TransactionService {
       data: 'Transaction as created',
     };
   }
+
+  deleteTransaction(id: number) {
+    return this.prisma.transaction.delete({ where: { id } });
+  }
 }
