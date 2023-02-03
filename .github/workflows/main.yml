@@ -13,10 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Build Docker image
-      run: docker build -t nest/bankroot:v1 src/back
-
-    - name: Send Docker image to server
+    - name: Send files to server
       uses: appleboy/scp-action@master
       with:
         host: 152.228.163.78
@@ -25,7 +22,7 @@ jobs:
         source: src/back/
         target: bankroot
 
-    - name: Deploy Docker image to server
+    - name: Deploy to server
       uses: appleboy/ssh-action@master
       with:
         host: 152.228.163.78
@@ -33,6 +30,4 @@ jobs:
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
           cd /home/debian/bankroot/src/back
-          docker stop bankroot || true
-          docker rm bankroot || true
-          docker run --name bankroot -d -p 80:80 nest/bankroot:v1
+          docker-compose up -d
