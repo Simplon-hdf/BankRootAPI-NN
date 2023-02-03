@@ -99,4 +99,10 @@ export class AccountRequestService {
 
     return { status: HttpStatus.OK, data: 'request send!' };
   }
+
+  deleteRequest(id: number) {
+    return this.prisma.request.delete({
+      where: { id: id },
+    });
+  }
 }

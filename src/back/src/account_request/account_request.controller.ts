@@ -1,15 +1,24 @@
-import { Body, Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { AccountRequestService } from './account_request.service';
 import { CreateAccountRequestDto } from './dto/create-account_request.dto';
-import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('account-request')
+@ApiTags('Account Requests')
 export class AccountRequestController {
   constructor(private readonly accountRequestService: AccountRequestService) {}
 
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Request succefully created',
+    description: 'Request successfully created',
   })
   @Post()
   createRequest(@Body() createAccountRequestDto: CreateAccountRequestDto) {
@@ -24,5 +33,9 @@ export class AccountRequestController {
   @Get(':uuid')
   getAllRequestsByUser(@Param('uuid') uuid: string) {
     return this.accountRequestService.getRequestsByUser(uuid);
+  }
+  @Delete(':id')
+  deleteRequest(@Param('id') id: number) {
+    return this.accountRequestService.deleteRequest(id);
   }
 }

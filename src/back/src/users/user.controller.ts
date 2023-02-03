@@ -6,13 +6,15 @@ import {
   Body,
   Param,
   Post,
+  Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
+@ApiTags('The user')
 export class UserController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -46,5 +48,9 @@ export class UserController {
   })
   register(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createAccountWithRandomPassword(createUserDto);
+  }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.deleteUser({ id: Number(id) });
   }
 }

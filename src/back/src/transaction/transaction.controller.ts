@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Delete } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -34,5 +34,9 @@ export class TransactionController {
     transactionByBankAccount: TransactionByBankaccountDto,
   ) {
     return this.transactionService.fetchByBankAccount(transactionByBankAccount);
+  }
+  @Delete(':id')
+  delete(@Param('id') id: number) {
+    return this.transactionService.deleteTransaction(id);
   }
 }

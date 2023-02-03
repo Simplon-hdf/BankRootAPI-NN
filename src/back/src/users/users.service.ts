@@ -162,4 +162,12 @@ export class UsersService {
 
     throw new HttpException('Identifiant incorrecte', 401);
   }
+
+  deleteUser(param: { id: number }) {
+    return this.prisma.user.delete({
+      where: {
+        id: param.id,
+      },
+    });
+  }
 }
