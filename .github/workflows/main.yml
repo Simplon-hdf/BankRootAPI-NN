@@ -30,4 +30,5 @@ jobs:
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
           cd /home/debian/bankroot/src/back
+          docker build -t nest/bankroot:v1 .
           docker-compose up -d
