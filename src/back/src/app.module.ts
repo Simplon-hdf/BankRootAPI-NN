@@ -8,7 +8,12 @@ import { AccountRequestModule } from './account_request/account_request.module';
 import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
-  imports: [AuthModule, AccountRequestModule, BankAccountModule, TransactionModule],
+  imports: [
+    AuthModule,
+    AccountRequestModule,
+    BankAccountModule,
+    TransactionModule,
+  ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
