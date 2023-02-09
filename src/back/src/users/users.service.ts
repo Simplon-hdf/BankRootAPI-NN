@@ -56,12 +56,8 @@ export class UsersService {
     });
   }
 
-  async findOne(id: number): Promise<user | undefined> {
-    return this.prisma.user.findFirst({
-      where: {
-        id: id,
-      },
-    });
+  async findOne(id: number): Promise<user | null> {
+    return this.user({ id: id });
   }
 
   findAll() {
