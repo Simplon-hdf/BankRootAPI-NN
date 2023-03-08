@@ -22,7 +22,7 @@ jobs:
         source: src/back/
         target: bankroot
 
-    - name: Deploy to server
+    - name: Deploy to server !
       uses: appleboy/ssh-action@master
       with:
         host: 152.228.163.78
