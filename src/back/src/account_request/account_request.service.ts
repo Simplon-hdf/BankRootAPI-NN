@@ -93,7 +93,7 @@ export class AccountRequestService {
       request_type: createAccountRequestDto.type,
       status: false,
       user: {
-        connect: { id: user.id },
+        connect: { id: user?.id },
       },
     });
 

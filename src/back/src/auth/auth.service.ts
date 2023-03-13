@@ -36,6 +36,11 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const user = await this.usersService.findUserByMail(loginDto.mail);
+
+    if (!user) {
+      throw new Error('User not exist');
+    }
+
     return {
       access_token: this.jwtService.sign(user),
     };
