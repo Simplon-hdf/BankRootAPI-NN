@@ -7,10 +7,9 @@ import {
 } from '@nestjs/common';
 import { peut_posseder, Prisma, user } from '@prisma/client';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { use } from 'passport';
+
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { RankEnum } from '../enums/rank.enum';
 import { BankAccountService } from '../bank-account/bank-account.service';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -157,5 +156,13 @@ export class UsersService {
     }
 
     throw new HttpException('Identifiant incorrecte', 401);
+  }
+
+  deleteUser(param: { id: number }) {
+    return this.prisma.user.delete({
+      where: {
+        id: param.id,
+      },
+    });
   }
 }

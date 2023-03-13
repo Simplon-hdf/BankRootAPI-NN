@@ -239,4 +239,10 @@ export class BankAccountService {
     }
     return this.addCurrency(createWithdrawalDto);
   }
+
+  delete(id: number) {
+    return this.prisma.bank_account.delete({
+      where: { id },
+    });
+  }
 }

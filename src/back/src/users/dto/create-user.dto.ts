@@ -2,16 +2,50 @@ import { ApiProperty } from '@nestjs/swagger';
 import { RankEnum } from '../../enums/rank.enum';
 
 export class CreateUserDto {
-  @ApiProperty()
+  @ApiProperty({
+    name: 'uuid',
+    description: 'UUID of user',
+    minimum: 1,
+  })
   name: string;
-  @ApiProperty()
+  @ApiProperty({
+    name: 'name',
+    description: 'Name of user',
+    minimum: 1,
+  })
+  @ApiProperty({
+    name: 'lastname',
+    description: 'Lastname of user',
+    minimum: 1,
+  })
   lastname: string;
-  @ApiProperty()
+  @ApiProperty({
+    name: 'mail',
+    description: 'Mail of user',
+    minimum: 1,
+  })
   mail: string;
-  @ApiProperty()
+  @ApiProperty({
+    name: 'password',
+    description: 'Password of user',
+    minimum: 1,
+  })
+  @ApiProperty({
+    name: 'created_at',
+    description: 'Date of creation of user',
+    minimum: 1,
+  })
   created_at: Date;
-  @ApiProperty()
+  @ApiProperty({
+    name: 'updated_at',
+    description: 'Date of update of user',
+    minimum: 1,
+  })
   updated_at: Date;
-  @ApiProperty()
+  @ApiProperty({
+    name: 'rank',
+    description: 'Rank of user',
+    enum: RankEnum,
+  })
   rank: RankEnum;
 }

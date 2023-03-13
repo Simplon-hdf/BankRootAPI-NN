@@ -1,4 +1,4 @@
-FROM node
+FROM node:slim
 COPY . .
 RUN npm install
 RUN npx prisma generate

@@ -1,6 +1,5 @@
 # docker-compose.yml
-
-version: '3.8'
+version: '3.7'
 services:
   nest:
     image: nest/bankroot:v1
@@ -12,13 +11,13 @@ services:
     environment:
       - DATABASE_URL=postgres://root:strong@postgres:5432/bankroot
   postgres:
-    image: postgres:13.5
+    image: postgres:12.2
     restart: always
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=strong
     volumes:
-      - postgres:/var/lib/postgresql/data
+        - postgres:/var/lib/postgresql/data
     ports:
       - '5432:5432'
     networks:
