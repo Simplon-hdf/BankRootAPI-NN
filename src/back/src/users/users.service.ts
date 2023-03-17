@@ -1,6 +1,7 @@
 import {
   forwardRef,
-  HttpException, HttpStatus,
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   Param,
@@ -15,6 +16,7 @@ import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterDto } from '../auth/dto/register.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthService } from '../auth/auth.service';
 
 export type User = any;
 @Injectable()
@@ -23,6 +25,8 @@ export class UsersService {
     private prisma: PrismaService,
     @Inject(forwardRef(() => BankAccountService))
     private bankAccountService: BankAccountService,
+    @Inject(forwardRef(() => AuthService))
+    private authService: AuthService,
   ) {}
 
   async user(userWereInput: Prisma.userWhereInput): Promise<user | null> {
@@ -123,12 +127,10 @@ export class UsersService {
 
     await this.bankAccountService.createAccount(newUser.uuid);
 
-    return JSON.parse(
-      JSON.stringify({
-        statusCode: 200,
-        description: 'Create user successfuly',
-      }),
-    );
+    return {
+      statusCode: 200,
+      description: 'Create user successfuly',
+    };
   }
 
   async resetPassword(
