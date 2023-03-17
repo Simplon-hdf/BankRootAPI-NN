@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateCeilingDto {
   @ApiProperty()
-  account_num: bigint;
+  account_num: string;
   @ApiProperty()
   new_value: number;
   @ApiProperty()
