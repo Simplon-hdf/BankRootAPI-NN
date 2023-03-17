@@ -19,5 +19,5 @@ export class CreateTransactionDto {
   @ApiProperty({
     description: 'Number of user account make transaction',
   })
-  num_account: bigint;
+  num_account: string;
 }

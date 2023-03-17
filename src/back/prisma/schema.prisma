@@ -10,12 +10,12 @@ datasource db {
 model bank_account {
   id               Int             @id(map: "bank_account_pk") @default(autoincrement())
   currency         Int             @default(0)
-  num_account      BigInt
+  num_account      String          @db.VarChar(255)
   withdrawal_limit Int
   payment_ceiling  Int
   overdraft_limit  Int
   created_at       DateTime        @default(now())
-  update_at        DateTime        @default(now())
+  update_at        DateTime        @updatedAt
   peut_gerer       peut_gerer[]
   peut_posseder    peut_posseder[]
   transaction      transaction[]
@@ -54,7 +54,7 @@ model request {
   request_type String    @db.VarChar(50)
   status       Boolean
   created_at   DateTime  @default(now())
-  update_at    DateTime  @default(now())
+  update_at    DateTime  @updatedAt
   id_user      Int
   user         user      @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "request_user_fk")
   traiter      traiter[]
@@ -75,7 +75,7 @@ model transaction {
   state           Boolean
   type            String         @db.VarChar(50)
   created_at      DateTime       @default(now())
-  update_at       DateTime       @default(now())
+  update_at       DateTime       @updatedAt
   id_user         Int
   id_bank_account Int
   peut_valider    peut_valider[]
@@ -92,7 +92,7 @@ model user {
   uuid          String          @db.VarChar(250)
   rank          Int             @default(0)
   created_at    DateTime        @default(now())
-  updated_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
   peut_gerer    peut_gerer[]
   peut_posseder peut_posseder[]
   peut_valider  peut_valider[]
