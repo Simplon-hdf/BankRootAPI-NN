@@ -28,7 +28,7 @@ export class BankAccountService {
     return this.prisma.bank_account.create({ data });
   }
 
-  async findByNumAccount(num_account: number): Promise<bank_account | null> {
+  async findByNumAccount(num_account: string): Promise<bank_account | null> {
     return this.prisma.bank_account.findFirst({
       where: {
         num_account: num_account,
@@ -60,7 +60,7 @@ export class BankAccountService {
       where: { user: user },
     });
   }
-  async findOneBankNum(bank_account: number): Promise<bank_account | null> {
+  async findOneBankNum(bank_account: string): Promise<bank_account | null> {
     return this.prisma.bank_account.findFirst({
       where: {
         num_account: bank_account,
@@ -98,7 +98,7 @@ export class BankAccountService {
         payment_ceiling: 500,
         withdrawal_limit: 500,
         currency: 0,
-        num_account: Date.now(),
+        num_account: Date.now().toString(),
       }),
     ]);
 
@@ -122,7 +122,7 @@ export class BankAccountService {
 
   async updateCeiling(updateCeilingDto: UpdateCeilingDto) {
     const account = await this.bank_account({
-      num_account: parseInt(String(updateCeilingDto.account_num)),
+      num_account: updateCeilingDto.account_num,
     });
 
     if (!account) {
@@ -149,7 +149,7 @@ export class BankAccountService {
 
   async withdrawal(@Body() withdrawalDto: CreateWithdrawalDto) {
     const account = await this.bank_account({
-      num_account: parseInt(String(withdrawalDto.num_account)),
+      num_account: withdrawalDto.num_account,
     });
 
     if (!account) {
@@ -204,7 +204,7 @@ export class BankAccountService {
   //add currency
   async addCurrency(createWithdrawalDto: CreateWithdrawalDto) {
     const account = await this.bank_account({
-      num_account: parseInt(String(createWithdrawalDto.num_account)),
+      num_account: createWithdrawalDto.num_account,
     });
     if (!account) {
       return {

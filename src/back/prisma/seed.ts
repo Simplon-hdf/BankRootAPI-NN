@@ -2,21 +2,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  const user = await prisma.user.upsert({
-    where: { id: 0 },
-    update: {},
-    create: {
-      mail: 'admin@bankroot.fr',
-      name: 'admin',
-      lastname: 'admin',
-      uuid: 'test',
-      password: 'test',
-      rank: 1,
-      created_at: new Date(),
-      updated_at: new Date(),
-    },
-  });
-  console.log({ user });
+
 }
 
 main()

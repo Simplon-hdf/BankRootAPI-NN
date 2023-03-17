@@ -10,7 +10,7 @@ datasource db {
 model bank_account {
   id               Int             @id(map: "bank_account_pk") @default(autoincrement())
   currency         Int             @default(0)
-  num_account      BigInt
+  num_account      String          @db.VarChar(255)
   withdrawal_limit Int
   payment_ceiling  Int
   overdraft_limit  Int

@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class TransactionByBankaccountDto {
-  @ApiProperty()
-  account_num: bigint;
+  @ApiProperty({
+    description: 'The bank account number',
+    example: '123456789',
+    type: 'string',
+  })
+  account_num: string;
 }
