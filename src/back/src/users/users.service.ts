@@ -37,11 +37,17 @@ export class UsersService {
 
   //find user by mail
   async findUserByMail(mail: string): Promise<user | null> {
-    return this.prisma.user.findFirst({
+    const user = this.prisma.user.findFirstOrThrow({
       where: {
         mail: mail,
       },
     });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    return user;
   }
 
   async create(data: Prisma.userCreateInput): Promise<user> {
@@ -60,7 +66,11 @@ export class UsersService {
   }
 
   async findOne(id: number): Promise<user | null> {
-    return this.user({ id: id });
+    return this.prisma.user.findFirst({
+      where: {
+        id: id,
+      },
+    });
   }
 
   findAll() {

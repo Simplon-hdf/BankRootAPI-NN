@@ -6,12 +6,16 @@ import {
   Body,
   Param,
   Post,
-  Delete, HttpStatus,
+  Delete,
+  HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import {ApiBody, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { LocalAuthGuard } from '../auth/guard/local-auth.guard';
 
 @Controller('user')
 @ApiTags('The user')
@@ -23,18 +27,20 @@ export class UserController {
     return this.usersService.findAll();
   }
 
-
   //find user by id
   @Get(':id')
   @ApiParam({
     name: 'id',
     description: 'The user id',
   })
-  findOne(@Param() id: number) {
-    return this.usersService.findOne(id);
+  @UseGuards(JwtAuthGuard)
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(parseInt(id));
   }
-  @Get('me')
-  findMe(@Request() req) {
+
+  @Get('/find/profile')
+  @UseGuards(JwtAuthGuard)
+  getProfile(@Request() req) {
     return req.user;
   }
 
