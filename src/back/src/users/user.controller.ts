@@ -13,12 +13,19 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { LocalAuthGuard } from '../auth/guard/local-auth.guard';
 
 @Controller('user')
 @ApiTags('The user')
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -46,6 +53,7 @@ export class UserController {
 
   //update
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiParam({
     name: 'id',
     description: 'The user id',
@@ -73,10 +81,11 @@ export class UserController {
     description: 'User already exist',
   })
   @ApiBody({
-    description: 'The user to create',
+    description: 'The user to create with random password',
     type: CreateUserDto,
     required: true,
   })
+  @UseGuards(JwtAuthGuard)
   register(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createAccountWithRandomPassword(createUserDto);
   }
@@ -86,6 +95,7 @@ export class UserController {
     description: 'The user id',
     required: true,
   })
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.usersService.deleteUser({ id: Number(id) });
   }

@@ -1,11 +1,21 @@
-import { Controller, Post, Body, Get, Delete, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Delete,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { BankAccountService } from './bank-account.service';
 import { UpdateCeilingDto } from './dto/update-ceiling.dto';
 import { CreateWithdrawalDto } from './dto/Create-withdrawal.dto';
-import { ApiBody, ApiParam, ApiTags} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 
 @Controller('bank-account')
 @ApiTags('Bank Accounts')
+@ApiBearerAuth()
 export class BankAccountController {
   constructor(private readonly bankAccountService: BankAccountService) {}
 
@@ -14,6 +24,7 @@ export class BankAccountController {
     type: UpdateCeilingDto,
     description: 'Update ceiling of a bank account',
   })
+  @UseGuards(JwtAuthGuard)
   updateCeiling(@Body() updateCeilingDto: UpdateCeilingDto) {
     return this.bankAccountService.updateCeiling(updateCeilingDto);
   }
@@ -22,6 +33,7 @@ export class BankAccountController {
     description: 'Id of the bank account',
     name: 'id',
   })
+  @UseGuards(JwtAuthGuard)
   findOne(id: number) {
     return this.bankAccountService.findOne(id);
   }
@@ -35,6 +47,7 @@ export class BankAccountController {
     description: 'Id of the bank account',
     name: 'id',
   })
+  @UseGuards(JwtAuthGuard)
   withdrawal(
     @Param('id') id: number,
     @Body() createWithdrawalDto: CreateWithdrawalDto,
@@ -51,6 +64,7 @@ export class BankAccountController {
     description: 'Id of the bank account',
     name: 'id',
   })
+  @UseGuards(JwtAuthGuard)
   deposit(
     @Param('id') id: number,
     @Body() createWithdrawalDto: CreateWithdrawalDto,
@@ -62,6 +76,7 @@ export class BankAccountController {
     description: 'Id of the bank account',
     name: 'id',
   })
+  @UseGuards(JwtAuthGuard)
   delete(@Param('id') id: number) {
     return this.bankAccountService.delete(id);
   }
