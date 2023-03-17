@@ -1,6 +1,6 @@
 import {
   forwardRef,
-  HttpException,
+  HttpException, HttpStatus,
   Inject,
   Injectable,
   Param,
@@ -108,7 +108,7 @@ export class UsersService {
     const user = await this.user({ mail: registerDto.mail });
 
     if (user) {
-      throw new HttpException('User exist', 200);
+      throw new HttpException('User exist', HttpStatus.CONFLICT);
     }
     console.log(registerDto);
 
