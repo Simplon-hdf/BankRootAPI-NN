@@ -89,8 +89,36 @@ export class UsersService {
   }
 
   async remove(@Param('id') id: string): Promise<User> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const bankAccount = await this.prisma.peut_posseder.findMany({
+      where: {
+        user: {
+          id: user.id,
+        },
+      },
+    });
+
+    if (bankAccount.length > 0) {
+      for (const account of bankAccount) {
+        this.prisma.bank_account.delete({
+          where: {
+            id: account.id_bank_account,
+          },
+        });
+      }
+    }
+
     return this.prisma.user.delete({
-      where: { id: Number(id) },
+      where: { id: user.id },
     });
   }
 
