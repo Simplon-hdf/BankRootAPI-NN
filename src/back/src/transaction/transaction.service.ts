@@ -31,11 +31,11 @@ export class TransactionService {
     return this.prisma.transaction.findMany();
   }
 
-  async fetchByUser(transactionByUserDto: TransactionByUserDto) {
+  async fetchByUser(uuid: string) {
     return {
       statusCode: HttpStatus.OK,
       data: this.transactions({
-        user: { uuid: transactionByUserDto.user_uuid },
+        user: { uuid: uuid },
       }),
     };
   }

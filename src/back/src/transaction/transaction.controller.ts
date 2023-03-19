@@ -46,11 +46,8 @@ export class TransactionController {
     description: 'The user uuid',
   })
   @UseGuards(JwtAuthGuard)
-  fetchByUser(
-    @Param('uuid') uuid: string,
-    @Body() transactionByUserDto: TransactionByUserDto,
-  ) {
-    return this.transactionService.fetchByUser(transactionByUserDto);
+  fetchByUser(@Param('uuid') uuid: string) {
+    return this.transactionService.fetchByUser(uuid);
   }
 
   @Get('bank-account/:num_account')
