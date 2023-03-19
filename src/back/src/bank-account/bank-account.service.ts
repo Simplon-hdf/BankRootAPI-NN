@@ -55,10 +55,27 @@ export class BankAccountService {
     });
   }
 
-  async findAccountWithUser(user: user) {
-    return this.prisma.peut_posseder.findFirst({
-      where: { user: user },
+  async findAccountWithUser(uuid: string) {
+    const peut_posseder = await this.prisma.peut_posseder.findMany({
+      where: { user: { uuid: uuid } },
     });
+
+    const account: any = [];
+
+    for (const posseder of peut_posseder) {
+      const bank_account = await this.prisma.bank_account.findUnique({
+        where: { id: posseder.id_bank_account },
+      });
+
+      if (bank_account === null) continue;
+
+      account.push(bank_account);
+    }
+
+    return {
+      status: HttpStatus.OK,
+      data: account,
+    };
   }
   async findOneBankNum(bank_account: string): Promise<bank_account | null> {
     return this.prisma.bank_account.findFirst({
