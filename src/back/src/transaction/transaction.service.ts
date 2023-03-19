@@ -73,7 +73,7 @@ export class TransactionService {
     }
 
     await this.create({
-      amount: 0,
+      amount: createTransactionDto.amount,
       bank_account: { connect: { id: bankAccount.id } },
       state: false,
       type: createTransactionDto.type,
