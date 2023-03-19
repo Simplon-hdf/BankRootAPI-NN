@@ -55,16 +55,9 @@ export class TransactionController {
     name: 'num_account',
     description: 'The bank account number',
   })
-  @ApiBody({
-    description: 'The transaction to create',
-    type: TransactionByBankaccountDto,
-  })
   @UseGuards(JwtAuthGuard)
-  fetchByBankAccount(
-    @Param('num_account') num_account: bigint,
-    transactionByBankAccount: TransactionByBankaccountDto,
-  ) {
-    return this.transactionService.fetchByBankAccount(transactionByBankAccount);
+  fetchByBankAccount(@Param('num_account') num_account: string) {
+    return this.transactionService.fetchByBankAccount(num_account);
   }
   @Delete(':id')
   @ApiParam({

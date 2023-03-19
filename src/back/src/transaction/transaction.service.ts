@@ -40,13 +40,11 @@ export class TransactionService {
     };
   }
 
-  async fetchByBankAccount(
-    transactionByBankaccountDto: TransactionByBankaccountDto,
-  ) {
+  async fetchByBankAccount(num_account: string) {
     return {
       statusCode: HttpStatus.OK,
       data: this.transactions({
-        bank_account: { num_account: transactionByBankaccountDto.account_num },
+        bank_account: { num_account: num_account },
       }),
     };
   }
