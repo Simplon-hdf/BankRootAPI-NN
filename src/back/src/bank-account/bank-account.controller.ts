@@ -80,4 +80,14 @@ export class BankAccountController {
   delete(@Param('id') id: number) {
     return this.bankAccountService.delete(id);
   }
+
+  @Get('user/:uuid')
+  @ApiParam({
+    name: 'uuid',
+    description: 'The user uuid',
+  })
+  @UseGuards(JwtAuthGuard)
+  getAccountByUUID(@Param('uuid') uuid: string) {
+    return this.bankAccountService.findAccountWithUser(uuid);
+  }
 }
