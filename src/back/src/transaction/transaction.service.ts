@@ -43,7 +43,7 @@ export class TransactionService {
   async fetchByBankAccount(num_account: string) {
     return {
       statusCode: HttpStatus.OK,
-      data: this.transactions({
+      data: await this.transactions({
         bank_account: { num_account: num_account },
       }),
     };
