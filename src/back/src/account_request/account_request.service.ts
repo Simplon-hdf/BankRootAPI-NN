@@ -101,8 +101,9 @@ export class AccountRequestService {
   }
 
   deleteRequest(id: number) {
+    console.log(typeof id);
     return this.prisma.request.delete({
-      where: { id: id },
+      where: { id: parseInt(String(id)) },
     });
   }
 }
